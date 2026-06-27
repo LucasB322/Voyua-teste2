@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0">
+<title>Vouya — Safe Travel</title>
+<meta name="description" content="Vouya — the all-in-one travel companion built around your safety.">
+<meta name="theme-color" content="#2563EB">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app-frame" class="app-frame">
+  <div id="app" class="app" data-screen="splash">
+
+
+    <div class="device-notch" aria-hidden="true"></div>
+
+    <div id="toast-stack" class="toast-stack" aria-live="polite"></div>
+
+
+    <section class="screen screen--splash is-active" data-screen-id="splash">
+      <div class="splash__bg">
+        <div class="splash__grid"></div>
+        <div class="splash__glow splash__glow--a"></div>
+        <div class="splash__glow splash__glow--b"></div>
+      </div>
+      <div class="splash__content">
+        <div class="splash__mark">
+          <svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M28 4C28 4 10 18.4 10 30.4C10 40.5 18.06 48 28 48C37.94 48 46 40.5 46 30.4C46 18.4 28 4 28 4Z" fill="white" fill-opacity="0.14"/>
+            <path d="M28 4C28 4 10 18.4 10 30.4C10 40.5 18.06 48 28 48C37.94 48 46 40.5 46 30.4C46 18.4 28 4 28 4Z" stroke="white" stroke-width="2"/>
+            <path d="M28 16L34 30L28 27L22 30L28 16Z" fill="white"/>
+          </svg>
+        </div>
+        <h1 class="splash__title">Vouya</h1>
+        <p class="splash__tagline">Travel boldly. Stay protected.</p>
+      </div>
+      <div class="splash__loader" role="status" aria-label="Loading">
+        <div class="splash__loader-bar"><span id="splash-progress"></span></div>
+      </div>
+    </section>
+
+    <section class="screen screen--login" data-screen-id="login">
+      <div class="login__hero">
+        <div class="login__hero-art" aria-hidden="true">
+          <svg viewBox="0 0 400 260" width="100%" height="100%" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <linearGradient id="loginSky" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#2563EB"/>
+                <stop offset="1" stop-color="#1d4fd1"/>
+              </linearGradient>
+            </defs>
+            <rect width="400" height="260" fill="url(#loginSky)"/>
+            <path d="M0 180 Q 100 140 200 170 T 400 150 V260 H0 Z" fill="#ffffff" opacity="0.08"/>
+            <path d="M0 210 Q 120 170 240 200 T 400 190 V260 H0 Z" fill="#ffffff" opacity="0.12"/>
+            <circle cx="330" cy="55" r="34" fill="#ffffff" opacity="0.10"/>
+            <circle cx="60" cy="70" r="18" fill="#ffffff" opacity="0.08"/>
+            <path d="M150 110 l14 -14 l50 50 l30 -30 l8 8 l-38 38 l-50 -50 z" fill="#ffffff" opacity="0.16"/>
+          </svg>
+        </div>
+        <div class="login__brand">
+          <span class="login__brand-mark">V</span>
+          <span class="login__brand-word">Vouya</span>
+        </div>
+      </div>
+
+      <div class="login__sheet">
+        <div class="login__tabs" role="tablist">
+          <button class="login__tab is-active" data-login-tab="signin" role="tab" aria-selected="true">Sign in</button>
+          <button class="login__tab" data-login-tab="signup" role="tab" aria-selected="false">Create account</button>
+        </div>
+
+        <form class="login__form" id="login-form" autocomplete="off" novalidate>
+          <div class="field">
+            <label class="field__label" for="login-email">Email</label>
+            <div class="field__control">
+              <svg class="field__icon" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 7l9 6 9-6M5 5h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <input id="login-email" name="email" type="email" placeholder="you@email.com" value="amelia.cross@vouya.io">
+            </div>
+            <p class="field-error" data-error-for="login-email" hidden>Enter a valid email address.</p>
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="login-pass">Password</label>
+            <div class="field__control">
+              <svg class="field__icon" width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="5" y="11" width="14" height="9" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M8 11V8a4 4 0 1 1 8 0v3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+              <input id="login-pass" name="password" type="password" placeholder="••••••••" value="travelsafe">
+              <button type="button" class="field__suffix" id="toggle-pass" aria-label="Show password">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7z" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.7"/></svg>
+              </button>
+            </div>
+            <p class="field-error" data-error-for="login-pass" hidden>Password must be at least 6 characters.</p>
+          </div>
+
+          <button type="button" class="link-btn login__forgot">Forgot password?</button>
+
+          <button type="submit" class="btn btn--primary btn--block btn--lg" id="login-submit">
+            <span class="btn__label">Sign in</span>
+            <span class="btn__spinner" aria-hidden="true"></span>
+          </button>
+
+          <div class="login__divider"><span>or continue with</span></div>
+
+          <div class="login__social">
+            <button type="button" class="social-btn" data-toast="Apple sign-in is simulated in this demo">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M16.365 1.43c0 1.14-.493 2.27-1.177 3.08-.744.9-1.99 1.57-3.014 1.57-.12 0-.23-.02-.3-.03-.014-.11-.04-.225-.04-.345 0-1.1.55-2.27 1.27-3.06.78-.85 2.1-1.5 3.16-1.55.014.111.027.225.027.335h.074zM20.6 17.07c-.55 1.24-.82 1.8-1.53 2.9-1 1.54-2.4 3.46-4.14 3.48-1.55.02-1.95-1.01-4.04-1-2.1.01-2.55 1.02-4.1 1-1.75-.02-3.07-1.76-4.07-3.3C.18 16.46-.66 11.94 1.1 8.81c1.07-1.9 2.97-3.1 5.07-3.13 1.7-.03 2.76 1.05 4.15 1.05 1.36 0 2.18-1.06 4.15-1.06 1.85 0 3.8.99 5.07 2.65-4.45 2.42-3.73 8.77.06 8.75z"/></svg>
+              <span>Apple</span>
+            </button>
+            <button type="button" class="social-btn" data-toast="Google sign-in is simulated in this demo">
+              <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.07 5.07 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.1A6.97 6.97 0 0 1 5.45 12c0-.73.13-1.43.36-2.1V7.06H2.18A11.96 11.96 0 0 0 1 12c0 1.93.46 3.76 1.18 5.36l3.66-3.26z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 6.94l3.66 2.96c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
+              <span>Google</span>
+            </button>
+          </div>
+
+          <p class="login__terms">By continuing you agree to Vouya's <button type="button" class="link-btn">Terms</button> &amp; <button type="button" class="link-btn">Privacy Policy</button>.</p>
+        </form>
+      </div>
+    </section>
+
+    <section class="screen screen--home" data-screen-id="home">
+      <header class="home__top">
+        <div>
+          <p class="home__greeting" id="home-greeting">Good morning,</p>
+          <h1 class="home__name" id="home-name">Amelia ✈️</h1>
+        </div>
+        <div class="home__top-actions">
+          <button class="icon-btn icon-btn--ghost" data-nav="notifications" aria-label="Notifications">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.7 21a2 2 0 01-3.4 0" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+            <span class="notif-dot" id="notif-dot" hidden></span>
+          </button>
+          <button class="icon-btn icon-btn--ghost" data-nav="profile" aria-label="Open profile">
+            <img class="avatar avatar--sm" src="" data-avatar alt="Amelia's avatar">
+          </button>
+        </div>
+      </header>
+
+      <div class="home__scroll" data-scroll>
+
+        <!-- Safety status strip -->
+        <button class="safety-strip" data-nav="safety">
+          <span class="safety-strip__pulse"><span class="safety-strip__dot"></span></span>
+          <span class="safety-strip__text">
+            <strong>You're protected</strong>
+            <span>Live location · last checked 2 min ago</span>
+          </span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+
+       
+        <article class="section">
+          <div class="section__head">
+            <h2 class="section__title">Next trip</h2>
+            <button class="link-btn" data-nav="trips">See all</button>
+          </div>
+          <div id="next-trip-slot"><!-- populated by JS: trip-hero or empty state --></div>
+        </article>
+
+
+        <div class="grid-2">
+          <article class="mini-card mini-card--weather">
+            <div class="mini-card__row">
+              <span class="mini-card__label" id="weather-city">Weather</span>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="1.6"/><path d="M12 1v3M12 20v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M1 12h3M20 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+            </div>
+            <p class="mini-card__big" id="weather-temp">21°C</p>
+            <p class="mini-card__sub" id="weather-desc">Clear · feels like 23°</p>
+          </article>
+          <article class="mini-card mini-card--res" data-nav="trips">
+            <div class="mini-card__row">
+              <span class="mini-card__label">Reservations</span>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M3 10h18M8 3v4M16 3v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+            </div>
+            <p class="mini-card__big" id="reservations-count">3</p>
+            <p class="mini-card__sub" id="reservations-sub">Hotel, flight, train</p>
+          </article>
+        </div>
+
+
+        <article class="section">
+          <div class="section__head">
+            <h2 class="section__title">Quick actions</h2>
+          </div>
+          <div class="quick-actions">
+            <button class="quick-action" data-nav="explore">
+              <span class="quick-action__icon quick-action__icon--blue"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8"/><path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>
+              <span>Explore</span>
+            </button>
+            <button class="quick-action" data-nav="itinerary">
+              <span class="quick-action__icon quick-action__icon--green"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 12h18M3 6h18M3 18h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>
+              <span>Itinerary</span>
+            </button>
+            <button class="quick-action" data-nav="safety">
+              <span class="quick-action__icon quick-action__icon--red"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 3l7 3v5c0 5-3.2 8-7 10-3.8-2-7-5-7-10V6l7-3z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></span>
+              <span>Safety</span>
+            </button>
+            <button class="quick-action" data-toast="Currency converter coming soon">
+              <span class="quick-action__icon quick-action__icon--amber"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M9 9.5c0-1 1-1.8 2.5-1.8s2.7.8 2.7 2-1.2 1.7-2.7 2-2.5 1-2.5 2 1.2 1.8 2.7 1.8 2.5-.8 2.5-1.8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+              <span>Currency</span>
+            </button>
+          </div>
+        </article>
+
+        <article class="section">
+          <div class="section__head">
+            <h2 class="section__title">Curated for you</h2>
+            <button class="link-btn" data-nav="explore">See all</button>
+          </div>
+          <div class="hscroll" data-scroll id="curated-rail"><!-- populated by JS --></div>
+        </article>
+
+        <div class="scroll-spacer"></div>
+      </div>
+    </section>
+
+    <section class="screen screen--explore" data-screen-id="explore">
+      <header class="page-head">
+        <h1 class="page-head__title">Explore</h1>
+        <button class="icon-btn" data-toast="Filters coming soon" aria-label="Filters">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M7 12h10M10 18h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </button>
+      </header>
+
+      <div class="search-bar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8"/><path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <input type="text" placeholder="Search destinations, cities..." id="explore-search">
+      </div>
+
+      <div class="chip-row" data-scroll>
+        <button class="chip is-active" data-filter="all">All</button>
+        <button class="chip" data-filter="beach">Beach</button>
+        <button class="chip" data-filter="mountain">Mountain</button>
+        <button class="chip" data-filter="city">City</button>
+        <button class="chip" data-filter="culture">Culture</button>
+        <button class="chip" data-filter="budget">Budget</button>
+      </div>
+
+      <div class="explore__scroll" data-scroll>
+        <div class="section__head">
+          <h2 class="section__title">Trending now</h2>
+        </div>
+        <div class="hscroll" data-scroll id="trending-rail"><!-- populated by JS --></div>
+
+        <div class="section__head">
+          <h2 class="section__title">All destinations</h2>
+        </div>
+        <div class="dest-list" id="explore-list">
+          <!-- populated by JS -->
+        </div>
+        <div class="scroll-spacer"></div>
+      </div>
+    </section>
+
+    <section class="screen screen--detail" data-screen-id="explore-detail">
+      <div class="detail__scroll" data-scroll>
+        <div class="detail__hero" id="detail-hero" style="background-image:url('https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?q=80&w=1200&auto=format&fit=crop')">
+          <div class="detail__hero-top">
+            <button class="icon-btn icon-btn--glass" data-back aria-label="Go back">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <button class="icon-btn icon-btn--glass" data-fav id="detail-fav-btn" aria-label="Save to favorites">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7.5-4.7-10-9.3C.5 8.4 2.4 5 6 5c2 0 3.4 1 4 2.3C10.6 6 12 5 14 5c3.6 0 5.5 3.4 4 6.7C19.5 16.3 12 21 12 21z" stroke="currentColor" stroke-width="1.8"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="detail__sheet">
+          <div class="detail__handle"></div>
+          <div class="detail__head">
+            <div>
+              <h1 id="detail-name">Swiss Alps</h1>
+              <p class="detail__loc">📍 <span id="detail-country">Switzerland</span> · <span class="rating" id="detail-rating">★ 4.9</span> · <span id="detail-review-count">2,341</span> reviews</p>
+            </div>
+            <div class="detail__price">
+              <span class="detail__price-big" id="detail-price">$1,120</span>
+              <span class="detail__price-sub">/ person</span>
+            </div>
+          </div>
+
+          <div class="safety-score">
+            <div class="safety-score__ring" id="detail-safety-ring" style="--p:92"><span id="detail-safety-score">92</span></div>
+            <div class="safety-score__text">
+              <strong>Vouya Safety Score</strong>
+              <span id="detail-safety-label">Low risk · stable region · good emergency coverage</span>
+            </div>
+          </div>
+
+          <div class="tab-row">
+            <button class="tab is-active" data-detail-tab="overview">Overview</button>
+            <button class="tab" data-detail-tab="reviews">Reviews</button>
+            <button class="tab" data-detail-tab="safety">Safety</button>
+          </div>
+
+          <div class="tab-panel is-active" data-detail-panel="overview">
+            <p class="detail__desc" id="detail-desc">Snow-capped peaks, glacial lakes, and storybook villages.</p>
+            <div class="thumb-row" data-scroll id="detail-thumbs"></div>
+          </div>
+
+          <div class="tab-panel" data-detail-panel="reviews" id="detail-reviews"></div>
+
+          <div class="tab-panel" data-detail-panel="safety">
+            <ul class="safety-list" id="detail-safety-list"></ul>
+          </div>
+        </div>
+      </div>
+      <div class="detail__cta">
+        <button class="btn btn--primary btn--block btn--lg" id="detail-book-btn">Add to my trips</button>
+      </div>
+    </section>
+
+    <section class="screen screen--trips" data-screen-id="trips">
+      <header class="page-head">
+        <h1 class="page-head__title">My trips</h1>
+        <button class="icon-btn" id="add-trip-btn" aria-label="Add trip">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </header>
+
+      <div class="tab-row tab-row--pill">
+        <button class="tab is-active" data-trips-tab="upcoming">Upcoming</button>
+        <button class="tab" data-trips-tab="past">Past</button>
+      </div>
+
+      <div class="trips__scroll" data-scroll>
+        <div class="tab-panel is-active" data-trips-panel="upcoming" id="trips-upcoming"><!-- JS --></div>
+        <div class="tab-panel" data-trips-panel="past" id="trips-past"><!-- JS --></div>
+        <div class="scroll-spacer"></div>
+      </div>
+    </section>
+
+    <section class="screen screen--feed" data-screen-id="feed">
+      <header class="page-head">
+        <h1 class="page-head__title">Community feed</h1>
+        <button class="icon-btn" id="feed-compose-btn" aria-label="Create a post">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </header>
+
+      <div class="feed-filter-row">
+        <button class="chip is-active" data-feed-filter="all">All posts</button>
+        <button class="chip" data-feed-filter="mine">Mine</button>
+      </div>
+
+      <div class="trips__scroll" data-scroll>
+        <div id="feed-list"><!-- JS --></div>
+        <div class="scroll-spacer"></div>
+      </div>
+    </section>
+
+    <section class="screen screen--itinerary" data-screen-id="itinerary">
+      <header class="page-head">
+        <button class="icon-btn" data-back aria-label="Go back">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <h1 class="page-head__title" id="itinerary-title">Itinerary</h1>
+        <button class="icon-btn" id="itinerary-share-btn" aria-label="Share">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 12v7a2 2 0 002 2h12a2 2 0 002-2v-7M16 6l-4-4-4 4M12 2v14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </header>
+
+      <div class="map-preview">
+        <svg class="map-preview__svg" viewBox="0 0 400 160" width="100%" height="100%" preserveAspectRatio="xMidYMid slice">
+          <rect class="map-preview__land" width="400" height="160"/>
+          <path class="map-preview__road map-preview__road--major" d="M0 60 C 60 40, 110 80, 170 55 S 280 30, 400 70" fill="none"/>
+          <path class="map-preview__road" d="M0 110 C 80 90, 140 130, 220 100 S 340 70, 400 120" fill="none"/>
+          <circle cx="60" cy="70" r="5" fill="#2563EB"/>
+          <circle cx="160" cy="50" r="5" fill="#2563EB"/>
+          <circle cx="250" cy="90" r="5" fill="#2563EB"/>
+          <circle cx="330" cy="55" r="5" fill="#2563EB"/>
+          <path d="M60 70 L160 50 L250 90 L330 55" stroke="#2563EB" stroke-width="2" stroke-dasharray="5 5" fill="none"/>
+        </svg>
+        <button class="map-preview__expand" data-toast="Opening full map">Open full map ↗</button>
+      </div>
+
+      <div class="day-row" data-scroll id="day-row"><!-- JS --></div>
+
+      <div class="itinerary__scroll" data-scroll>
+        <p class="itinerary__hint">Press and hold a card, then drag to reorder your day.</p>
+        <ul class="timeline" id="timeline-list"><!-- JS --></ul>
+        <button class="add-stop" id="add-stop-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          Add a stop
+        </button>
+        <div class="scroll-spacer"></div>
+      </div>
+    </section>
+
+    <section class="screen screen--safety" data-screen-id="safety">
+      <header class="page-head page-head--safety">
+        <h1 class="page-head__title">Safety</h1>
+        <span class="status-pill status-pill--ok">● Protected</span>
+      </header>
+
+      <div class="safety__scroll" data-scroll>
+
+        <div class="safety-map">
+          <svg class="safety-map__svg" viewBox="0 0 400 200" width="100%" height="100%" preserveAspectRatio="xMidYMid slice">
+            <rect class="safety-map__land" width="400" height="200"/>
+            <g class="safety-map__grid" stroke-width="1">
+              <path d="M0 40H400M0 80H400M0 120H400M0 160H400"/>
+              <path d="M40 0V200M100 0V200M160 0V200M220 0V200M280 0V200M340 0V200"/>
+            </g>
+            <circle cx="200" cy="100" r="46" fill="#2563EB" opacity="0.12"/>
+            <circle cx="200" cy="100" r="26" fill="#2563EB" opacity="0.18"/>
+            <circle cx="200" cy="100" r="8" fill="#2563EB"/>
+            <circle cx="200" cy="100" r="8" fill="#2563EB" class="pulse-ring"/>
+          </svg>
+          <div class="safety-map__label">
+            <strong>Gion District, Kyoto</strong>
+            <span>Accurate to 6m · updated just now</span>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="status-card">
+            <div class="status-card__icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="7" y="2" width="10" height="20" rx="2" stroke="currentColor" stroke-width="1.6"/><rect x="9" y="6" width="6" height="6" fill="currentColor" opacity="0.5"/><path d="M10 1h4v2h-4z" fill="currentColor"/></svg>
+            </div>
+            <span class="status-card__label">Battery</span>
+            <span class="status-card__value" id="battery-value">82%</span>
+          </div>
+          <div class="status-card">
+            <div class="status-card__icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M2 8.5a15 15 0 0120 0M5.5 12a10 10 0 0113 0M9 15.5a5 5 0 016 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="19" r="1.4" fill="currentColor"/></svg>
+            </div>
+            <span class="status-card__label">Connection</span>
+            <span class="status-card__value" id="connection-value">Strong</span>
+          </div>
+        </div>
+
+        <article class="section">
+          <div class="section__head">
+            <h2 class="section__title">Emergency contacts</h2>
+            <span class="link-btn" style="opacity:0.55; cursor:default;">Tap a contact to call</span>
+          </div>
+          <div class="contact-list" id="contact-list"><!-- JS --></div>
+        </article>
+
+        <article class="section">
+          <div class="section__head">
+            <h2 class="section__title">Travel advisories</h2>
+          </div>
+          <div class="advisory">
+            <span class="dot dot--green"></span>
+            <div>
+              <strong>Japan — Exercise normal precautions</strong>
+              <p>No active alerts for your current region.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="section">
+          <div class="section__head">
+            <h2 class="section__title">Recent activity</h2>
+          </div>
+          <div class="activity-list" id="safety-activity-list"><!-- JS --></div>
+        </article>
+
+        <div class="scroll-spacer scroll-spacer--sos"></div>
+      </div>
+
+      <div class="sos-dock">
+        <button class="sos-btn" id="sos-btn" aria-label="Hold for emergency SOS">
+          <span class="sos-btn__ring"></span>
+          <span class="sos-btn__progress" id="sos-progress"></span>
+          <span class="sos-btn__core">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M12 2l8 4v6c0 5.2-3.5 8.4-8 10-4.5-1.6-8-4.8-8-10V6l8-4z" fill="white"/></svg>
+            <span>SOS</span>
+          </span>
+        </button>
+        <p class="sos-dock__hint" id="sos-hint">Press and hold for 2 seconds to alert your contacts</p>
+      </div>
+    </section>
+
+    <section class="screen screen--profile" data-screen-id="profile">
+      <header class="page-head">
+        <h1 class="page-head__title">Profile</h1>
+        <button class="icon-btn" id="edit-profile-btn" aria-label="Edit profile">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4L16.5 3.5z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </header>
+
+      <div class="profile__scroll" data-scroll>
+        <div class="profile__head">
+          <div class="avatar-wrap">
+            <img class="avatar avatar--lg" src="" data-avatar alt="Profile avatar">
+            <span class="avatar-wrap__badge">✓</span>
+          </div>
+          <h2 id="profile-name">Amelia Cross</h2>
+          <p id="profile-meta">Member since 2022 · Explorer tier</p>
+        </div>
+
+        <div class="stat-row">
+          <div class="stat-box"><strong id="stat-countries">23</strong><span>Countries</span></div>
+          <div class="stat-box"><strong id="stat-trips">61</strong><span>Trips logged</span></div>
+          <div class="stat-box"><strong id="stat-rating">4.9</strong><span>Avg. rating</span></div>
+        </div>
+
+        <article class="section">
+          <div class="section__head"><h2 class="section__title">Preferences</h2></div>
+          <div class="settings-list">
+            <div class="settings-row">
+              <div class="settings-row__icon">🌙</div>
+              <div class="settings-row__body"><strong>Dark mode</strong><span>Easier on the eyes at night</span></div>
+              <button class="switch" id="dark-mode-toggle" role="switch" aria-checked="false"><span class="switch__thumb"></span></button>
+            </div>
+            <div class="settings-row">
+              <div class="settings-row__icon">📍</div>
+              <div class="settings-row__body"><strong>Location sharing</strong><span>Share live location with contacts</span></div>
+              <button class="switch is-on" id="location-toggle" role="switch" aria-checked="true"><span class="switch__thumb"></span></button>
+            </div>
+            <div class="settings-row">
+              <div class="settings-row__icon">🔔</div>
+              <div class="settings-row__body"><strong>Push notifications</strong><span>Trip updates & alerts</span></div>
+              <button class="switch is-on" id="notif-toggle" role="switch" aria-checked="true"><span class="switch__thumb"></span></button>
+            </div>
+          </div>
+        </article>
+
+        <article class="section">
+          <div class="section__head"><h2 class="section__title">Account</h2></div>
+          <div class="settings-list">
+            <button class="settings-row settings-row--link" id="payment-methods-btn">
+              <div class="settings-row__icon">💳</div>
+              <div class="settings-row__body"><strong>Payment methods</strong><span id="payment-summary">1 card on file</span></div>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <button class="settings-row settings-row--link" data-nav="safety">
+              <div class="settings-row__icon">🛟</div>
+              <div class="settings-row__body"><strong>Emergency contacts</strong></div>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <button class="settings-row settings-row--link" data-nav="notifications">
+              <div class="settings-row__icon">🔔</div>
+              <div class="settings-row__body"><strong>Notification history</strong></div>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <button class="settings-row settings-row--link" data-toast="Help center articles are demo-only for now">
+              <div class="settings-row__icon">❓</div>
+              <div class="settings-row__body"><strong>Help & support</strong></div>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <button class="settings-row settings-row--link" id="reset-data-btn">
+              <div class="settings-row__icon">🔄</div>
+              <div class="settings-row__body"><strong>Reset demo data</strong><span>Restore default trips & settings</span></div>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <button class="settings-row settings-row--link settings-row--danger" id="logout-btn">
+              <div class="settings-row__icon">🚪</div>
+              <div class="settings-row__body"><strong>Log out</strong></div>
+            </button>
+          </div>
+        </article>
+        <p class="profile__version">Vouya v2.5.0 · Made for travelers</p>
+        <div class="scroll-spacer"></div>
+      </div>
+    </section>
+
+    <section class="screen screen--notifications" data-screen-id="notifications">
+      <header class="page-head">
+        <button class="icon-btn" data-back aria-label="Go back">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <h1 class="page-head__title">Notifications</h1>
+        <button class="icon-btn" id="clear-notifications-btn" aria-label="Clear all">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0l-1 14a2 2 0 01-2 2H7a2 2 0 01-2-2L4 6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </header>
+      <div class="notifications__scroll" data-scroll>
+        <div id="notifications-list"><!-- JS --></div>
+        <div class="scroll-spacer"></div>
+      </div>
+    </section>
+
+    <section class="screen screen--booking" data-screen-id="booking">
+      <header class="page-head">
+        <button class="icon-btn" data-back aria-label="Go back">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <h1 class="page-head__title">Confirm trip</h1>
+        <span style="width:40px;"></span>
+      </header>
+      <div class="booking__scroll" data-scroll>
+        <div class="booking-summary" id="booking-summary"><!-- JS --></div>
+
+        <article class="section">
+          <div class="section__head"><h2 class="section__title">Travel dates</h2></div>
+          <div class="field-row-2">
+            <div class="field">
+              <label class="field__label" for="booking-start">Departure</label>
+              <div class="field__control">
+                <input id="booking-start" type="date">
+              </div>
+            </div>
+            <div class="field">
+              <label class="field__label" for="booking-end">Return</label>
+              <div class="field__control">
+                <input id="booking-end" type="date">
+              </div>
+            </div>
+          </div>
+          <p class="field-error" id="booking-date-error" hidden>Return date must be after departure.</p>
+        </article>
+
+        <article class="section">
+          <div class="section__head"><h2 class="section__title">Travelers</h2></div>
+          <div class="stepper">
+            <button class="stepper__btn" id="travelers-minus" aria-label="Decrease travelers">−</button>
+            <span class="stepper__value" id="travelers-value">1</span>
+            <button class="stepper__btn" id="travelers-plus" aria-label="Increase travelers">+</button>
+          </div>
+        </article>
+
+        <article class="section">
+          <div class="section__head"><h2 class="section__title">Trip protection</h2></div>
+          <label class="protection-card" for="protection-toggle">
+            <input type="checkbox" id="protection-toggle" checked hidden>
+            <span class="protection-card__icon">🛡</span>
+            <span class="protection-card__body">
+              <strong>Vouya Shield — included</strong>
+              <span>24/7 SOS monitoring, live location sharing, and emergency rebooking for this trip.</span>
+            </span>
+            <span class="protection-card__check">✓</span>
+          </label>
+        </article>
+
+        <div class="booking-total" id="booking-total"><!-- JS --></div>
+        <div class="scroll-spacer"></div>
+      </div>
+      <div class="detail__cta">
+        <button class="btn btn--primary btn--block btn--lg" id="confirm-booking-btn">Confirm & add to trips</button>
+      </div>
+    </section>
+
+    <nav class="bottom-nav is-hidden" id="bottom-nav">
+      <button class="bottom-nav__item is-active" data-nav="home" aria-label="Home">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M3 11l9-8 9 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 10v10h14V10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Home</span>
+      </button>
+      <button class="bottom-nav__item" data-nav="explore" aria-label="Explore">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8"/><path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <span>Explore</span>
+      </button>
+      <button class="bottom-nav__item" data-nav="trips" aria-label="Trips">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none"><rect x="3" y="7" width="18" height="13" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2" stroke="currentColor" stroke-width="1.8"/></svg>
+        <span>Trips</span>
+      </button>
+      <button class="bottom-nav__item" data-nav="feed" aria-label="Community feed">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M4 4h16v12H8l-4 4V4z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8 9h8M8 12h5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <span>Feed</span>
+      </button>
+      <button class="bottom-nav__item bottom-nav__item--safety" data-nav="safety" aria-label="Safety">
+        <span class="bottom-nav__safety-glow"></span>
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M12 3l7 3v5c0 5-3.2 8-7 10-3.8-2-7-5-7-10V6l7-3z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+        <span>Safety</span>
+      </button>
+      <button class="bottom-nav__item" data-nav="profile" aria-label="Profile">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.6" stroke="currentColor" stroke-width="1.8"/><path d="M4.5 20c1.3-3.3 4.3-5 7.5-5s6.2 1.7 7.5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <span>Profile</span>
+      </button>
+
+      <button class="bottom-nav__fab" id="composer-fab" aria-label="Create a post or review">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="white" stroke-width="2.4" stroke-linecap="round"/></svg>
+      </button>
+    </nav>
+
+    <div class="sheet-backdrop" id="sos-backdrop"></div>
+    <div class="bottom-sheet bottom-sheet--sos" id="sos-sheet" role="dialog" aria-modal="true" aria-labelledby="sos-sheet-title">
+      <div class="bottom-sheet__handle"></div>
+      <div class="sos-sheet__icon" id="sos-sheet-icon">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none"><path d="M12 9v4M12 17h.01" stroke="white" stroke-width="2.2" stroke-linecap="round"/><circle cx="12" cy="12" r="9" stroke="white" stroke-width="2"/></svg>
+      </div>
+      <h2 class="sos-sheet__title" id="sos-sheet-title">Sending your alert…</h2>
+      <p class="sos-sheet__sub" id="sos-sheet-sub">Notifying James Cross and Sofia Marin with your live location in</p>
+      <div class="sos-sheet__countdown" id="sos-countdown">5</div>
+      <button class="btn btn--outline-danger btn--block" id="sos-cancel">Cancel alert</button>
+    </div>
+
+    <!-- ===================== GENERIC MODAL (logout confirm) ===================== -->
+    <div class="modal-backdrop" id="modal-backdrop"></div>
+    <div class="modal" id="logout-modal" role="dialog" aria-modal="true" aria-labelledby="logout-modal-title">
+      <div class="modal__icon">🚪</div>
+      <h3 id="logout-modal-title">Log out of Vouya?</h3>
+      <p>You'll need to sign in again to access your trips and safety tools.</p>
+      <div class="modal__actions">
+        <button class="btn btn--ghost btn--block" id="logout-cancel">Stay signed in</button>
+        <button class="btn btn--danger btn--block" id="logout-confirm">Log out</button>
+      </div>
+    </div>
+
+    <div class="modal" id="reset-modal" role="dialog" aria-modal="true" aria-labelledby="reset-modal-title">
+      <div class="modal__icon">🔄</div>
+      <h3 id="reset-modal-title">Reset all demo data?</h3>
+      <p>This restores the original trips, contacts, and settings. Anything you've added will be lost.</p>
+      <div class="modal__actions">
+        <button class="btn btn--ghost btn--block" id="reset-cancel">Cancel</button>
+        <button class="btn btn--danger btn--block" id="reset-confirm">Reset data</button>
+      </div>
+    </div>
+
+    <!-- ===================== BOTTOM SHEET: ADD EMERGENCY CONTACT ===================== -->
+    <div class="sheet-backdrop" id="contact-backdrop"></div>
+    <div class="bottom-sheet bottom-sheet--form" id="contact-sheet" role="dialog" aria-modal="true" aria-labelledby="contact-sheet-title">
+      <div class="bottom-sheet__handle"></div>
+      <h2 class="form-sheet__title" id="contact-sheet-title">Add emergency contact</h2>
+      <form id="contact-form" novalidate>
+        <div class="field">
+          <label class="field__label" for="contact-name">Full name</label>
+          <div class="field__control"><input id="contact-name" type="text" placeholder="e.g. Daniela Reyes" required></div>
+          <p class="field-error" data-error-for="contact-name" hidden>Please enter a name.</p>
+        </div>
+        <div class="field">
+          <label class="field__label" for="contact-relation">Relationship</label>
+          <div class="field__control"><input id="contact-relation" type="text" placeholder="e.g. Partner, Parent, Friend" required></div>
+          <p class="field-error" data-error-for="contact-relation" hidden>Please enter a relationship.</p>
+        </div>
+        <div class="field">
+          <label class="field__label" for="contact-phone">Phone number</label>
+          <div class="field__control"><input id="contact-phone" type="tel" placeholder="+1 555 000 0000" required></div>
+          <p class="field-error" data-error-for="contact-phone" hidden>Enter a valid phone number.</p>
+        </div>
+        <div class="form-sheet__actions">
+          <button type="button" class="btn btn--ghost btn--block" data-close-sheet="contact">Cancel</button>
+          <button type="submit" class="btn btn--primary btn--block">Save contact</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- ===================== BOTTOM SHEET: ADD ITINERARY STOP ===================== -->
+    <div class="sheet-backdrop" id="stop-backdrop"></div>
+    <div class="bottom-sheet bottom-sheet--form" id="stop-sheet" role="dialog" aria-modal="true" aria-labelledby="stop-sheet-title">
+      <div class="bottom-sheet__handle"></div>
+      <h2 class="form-sheet__title" id="stop-sheet-title">Add a stop</h2>
+      <form id="stop-form" novalidate>
+        <div class="field">
+          <label class="field__label" for="stop-name">What's the plan?</label>
+          <div class="field__control"><input id="stop-name" type="text" placeholder="e.g. Dinner at Gion Karyo" required></div>
+          <p class="field-error" data-error-for="stop-name" hidden>Please describe the stop.</p>
+        </div>
+        <div class="field-row-2">
+          <div class="field">
+            <label class="field__label" for="stop-time">Time</label>
+            <div class="field__control"><input id="stop-time" type="time" required></div>
+            <p class="field-error" data-error-for="stop-time" hidden>Please pick a time.</p>
+          </div>
+          <div class="field">
+            <label class="field__label" for="stop-icon">Type</label>
+            <div class="field__control">
+              <select id="stop-icon">
+                <option value="sight">📍 Sightseeing</option>
+                <option value="food">🍴 Food & drink</option>
+                <option value="stay">🏨 Lodging</option>
+                <option value="transit">🚆 Transit</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field__label" for="stop-note">Note (optional)</label>
+          <div class="field__control"><input id="stop-note" type="text" placeholder="e.g. Book ahead, allow 1.5 hrs"></div>
+        </div>
+        <div class="form-sheet__actions">
+          <button type="button" class="btn btn--ghost btn--block" data-close-sheet="stop">Cancel</button>
+          <button type="submit" class="btn btn--primary btn--block">Add to day</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- ===================== BOTTOM SHEET: EDIT PROFILE ===================== -->
+    <div class="sheet-backdrop" id="profile-backdrop"></div>
+    <div class="bottom-sheet bottom-sheet--form" id="profile-sheet" role="dialog" aria-modal="true" aria-labelledby="profile-sheet-title">
+      <div class="bottom-sheet__handle"></div>
+      <h2 class="form-sheet__title" id="profile-sheet-title">Edit profile</h2>
+      <form id="profile-form" novalidate>
+        <div class="field">
+          <label class="field__label" for="profile-name-input">Full name</label>
+          <div class="field__control"><input id="profile-name-input" type="text" required></div>
+          <p class="field-error" data-error-for="profile-name-input" hidden>Please enter your name.</p>
+        </div>
+        <div class="field">
+          <label class="field__label" for="profile-tier-input">Membership tier</label>
+          <div class="field__control">
+            <select id="profile-tier-input">
+              <option value="Explorer">Explorer tier</option>
+              <option value="Voyager">Voyager tier</option>
+              <option value="Summit">Summit tier</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-sheet__actions">
+          <button type="button" class="btn btn--ghost btn--block" data-close-sheet="profile">Cancel</button>
+          <button type="submit" class="btn btn--primary btn--block">Save changes</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- ===================== BOTTOM SHEET: COMPOSER CHOICE (the + FAB) ===================== -->
+    <div class="sheet-backdrop" id="composer-backdrop"></div>
+    <div class="bottom-sheet bottom-sheet--composer-choice" id="composer-sheet" role="dialog" aria-modal="true" aria-labelledby="composer-sheet-title">
+      <div class="bottom-sheet__handle"></div>
+      <h2 class="form-sheet__title" id="composer-sheet-title">Create</h2>
+      <div class="composer-choice-list">
+        <button class="composer-choice" id="choice-review">
+          <span class="composer-choice__icon composer-choice__icon--review">⭐</span>
+          <span class="composer-choice__body">
+            <strong>Write a review</strong>
+            <span>Rate a destination you've traveled to</span>
+          </span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button class="composer-choice" id="choice-moment">
+          <span class="composer-choice__icon composer-choice__icon--moment">📸</span>
+          <span class="composer-choice__body">
+            <strong>Share a moment</strong>
+            <span>Post an update from a trip, just for fun</span>
+          </span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+      <button type="button" class="btn btn--ghost btn--block" data-close-sheet="composer">Cancel</button>
+    </div>
+
+    <div class="sheet-backdrop" id="review-backdrop"></div>
+    <div class="bottom-sheet bottom-sheet--form" id="review-sheet" role="dialog" aria-modal="true" aria-labelledby="review-sheet-title">
+      <div class="bottom-sheet__handle"></div>
+      <h2 class="form-sheet__title" id="review-sheet-title">Write a review</h2>
+      <form id="review-form" novalidate>
+        <div class="field">
+          <label class="field__label" for="review-destination">Destination</label>
+          <div class="field__control">
+            <select id="review-destination" required></select>
+          </div>
+          <p class="field-error" data-error-for="review-destination" hidden>Choose a destination.</p>
+        </div>
+
+        <div class="field">
+          <label class="field__label">Your rating</label>
+          <div class="star-picker" id="review-star-picker" role="radiogroup" aria-label="Star rating">
+            <button type="button" class="star-picker__star" data-star="1" aria-label="1 star">★</button>
+            <button type="button" class="star-picker__star" data-star="2" aria-label="2 stars">★</button>
+            <button type="button" class="star-picker__star" data-star="3" aria-label="3 stars">★</button>
+            <button type="button" class="star-picker__star" data-star="4" aria-label="4 stars">★</button>
+            <button type="button" class="star-picker__star" data-star="5" aria-label="5 stars">★</button>
+          </div>
+          <p class="field-error" id="review-star-error" hidden>Pick at least one star.</p>
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="review-text">Your review</label>
+          <div class="field__control field__control--textarea">
+            <textarea id="review-text" rows="4" placeholder="How safe did you feel? What should other travelers know?" required></textarea>
+          </div>
+          <p class="field-error" data-error-for="review-text" hidden>Write a few words about your trip.</p>
+        </div>
+
+        <div class="form-sheet__actions">
+          <button type="button" class="btn btn--ghost btn--block" data-close-sheet="review">Cancel</button>
+          <button type="submit" class="btn btn--primary btn--block">Post review</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="sheet-backdrop" id="moment-backdrop"></div>
+    <div class="bottom-sheet bottom-sheet--form" id="moment-sheet" role="dialog" aria-modal="true" aria-labelledby="moment-sheet-title">
+      <div class="bottom-sheet__handle"></div>
+      <h2 class="form-sheet__title" id="moment-sheet-title">Share a moment</h2>
+      <form id="moment-form" novalidate>
+        <div class="field">
+          <label class="field__label" for="moment-destination">Where are you?</label>
+          <div class="field__control">
+            <select id="moment-destination" required></select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="moment-text">What's happening?</label>
+          <div class="field__control field__control--textarea">
+            <textarea id="moment-text" rows="4" placeholder="Share an update, tip, or moment from your trip…" required></textarea>
+          </div>
+          <p class="field-error" data-error-for="moment-text" hidden>Write something to share.</p>
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="moment-photo">Add a photo (optional)</label>
+          <div class="moment-photo-picker" id="moment-photo-picker">
+            <button type="button" class="moment-photo-picker__option" data-photo="">No photo</button>
+            <button type="button" class="moment-photo-picker__option moment-photo-picker__option--thumb is-active" data-photo="random">🖼️ Use a trip photo</button>
+          </div>
+        </div>
+
+        <div class="form-sheet__actions">
+          <button type="button" class="btn btn--ghost btn--block" data-close-sheet="moment">Cancel</button>
+          <button type="submit" class="btn btn--primary btn--block">Post moment</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- ===================== GLOBAL LOADING OVERLAY ===================== -->
+    <div class="loading-overlay" id="loading-overlay">
+      <div class="loading-spinner"></div>
+    </div>
+
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
