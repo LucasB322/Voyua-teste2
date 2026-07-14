@@ -371,16 +371,14 @@
       </header>
 
       <div class="map-preview">
-        <svg class="map-preview__svg" viewBox="0 0 400 160" width="100%" height="100%" preserveAspectRatio="xMidYMid slice">
-          <rect class="map-preview__land" width="400" height="160"/>
-          <path class="map-preview__road map-preview__road--major" d="M0 60 C 60 40, 110 80, 170 55 S 280 30, 400 70" fill="none"/>
-          <path class="map-preview__road" d="M0 110 C 80 90, 140 130, 220 100 S 340 70, 400 120" fill="none"/>
-          <circle cx="60" cy="70" r="5" fill="#2563EB"/>
-          <circle cx="160" cy="50" r="5" fill="#2563EB"/>
-          <circle cx="250" cy="90" r="5" fill="#2563EB"/>
-          <circle cx="330" cy="55" r="5" fill="#2563EB"/>
-          <path d="M60 70 L160 50 L250 90 L330 55" stroke="#2563EB" stroke-width="2" stroke-dasharray="5 5" fill="none"/>
-        </svg>
+        <iframe
+           id="itinerary-map-iframe"
+            style="width:100%;height:100%;border:none;display:block;"
+            loading="lazy"
+            allowfullscreen
+            referrerpolicy="no-referrer-when-downgrade"
+            src="">
+        </iframe>
         <button class="map-preview__expand" data-toast="Opening full map">Open full map ↗</button>
       </div>
 
@@ -468,6 +466,49 @@
           </div>
           <div class="activity-list" id="safety-activity-list"><!-- JS --></div>
         </article>
+
+        <!-- COMPARTILHAR LOCALIZAÇÃO -->
+        <article class="section">
+          <div class="section__head">
+            <h2 class="section__title">Compartilhar localização</h2>
+          </div>
+          <div class="share-location-card">
+            <div class="share-location-card__info">
+              <span class="share-location-card__icon">🔗</span>
+              <div>
+                <strong>Link para familiares</strong>
+                <p>Envie um link para que seus contatos acompanhem sua viagem sem precisar baixar o app.</p>
+              </div>
+            </div>
+            <button class="btn btn--primary btn--block" id="share-location-btn">
+              Gerar link de acompanhamento
+            </button>
+          </div>
+        </article>
+
+        <!-- BOTTOM SHEET: LINK GERADO -->
+        <div class="sheet-backdrop" id="sharelink-backdrop"></div>
+        <div class="bottom-sheet bottom-sheet--form" id="sharelink-sheet" role="dialog" aria-modal="true">
+          <div class="bottom-sheet__handle"></div>
+          <h2 class="form-sheet__title">Link gerado</h2>
+          <p style="font-size:13px;color:var(--color-gray);text-align:center;margin-bottom:16px;">
+            Copie e envie para seus contatos de confiança. Eles poderão ver sua viagem sem baixar nenhum app.
+          </p>
+          <div class="sharelink-box">
+            <span id="sharelink-url" style="font-size:12px;word-break:break-all;color:var(--color-text);flex:1;"></span>
+            <button class="icon-btn icon-btn--soft" id="sharelink-copy-btn" aria-label="Copiar link">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="9" y="9" width="13" height="13" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" stroke="currentColor" stroke-width="1.7"/></svg>
+            </button>
+          </div>
+          <div class="sharelink-actions">
+            <button class="btn btn--ghost btn--block" id="sharelink-whatsapp-btn">
+              Enviar pelo WhatsApp
+            </button>
+            <button class="btn btn--ghost btn--block" data-close-sheet="sharelink">
+              Fechar
+            </button>
+          </div>
+        </div>
 
         <div class="scroll-spacer scroll-spacer--sos"></div>
       </div>
@@ -589,6 +630,7 @@
     </section>
 
     <!-- ===================== SCREEN: BOOKING ===================== -->
+
     <section class="screen screen--booking" data-screen-id="booking">
       <header class="page-head">
         <button class="icon-btn" data-back aria-label="Go back">
@@ -641,6 +683,11 @@
           </label>
         </article>
 
+        <article class="section">
+          <div class="section__head"><h2 class="section__title">Pagamento</h2></div>
+          <div id="booking-payment-slot"></div>
+        </article>
+
         <div class="booking-total" id="booking-total"><!-- JS --></div>
         <div class="scroll-spacer"></div>
       </div>
@@ -648,6 +695,95 @@
         <button class="btn btn--primary btn--block btn--lg" id="confirm-booking-btn">Confirm & add to trips</button>
       </div>
     </section>
+    <!-- ===================== SCREEN: PAYMENT METHODS ===================== -->
+<section class="screen screen--payment" data-screen-id="payment">
+  <header class="page-head">
+    <button class="icon-btn" data-back aria-label="Voltar">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <h1 class="page-head__title">Pagamento</h1>
+    <button class="icon-btn" id="add-card-btn" aria-label="Adicionar cartão">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+  </header>
+
+  <div class="payment__scroll" data-scroll>
+
+    <div class="payment__section-label">Seus cartões</div>
+    <div id="cards-list"></div>
+
+    <div class="payment__section-label" style="margin-top:24px">Métodos aceitos</div>
+    <div class="payment__accepted">
+      <div class="payment__accepted-item">
+        <span class="payment__brand payment__brand--visa">VISA</span>
+        <span>Visa</span>
+      </div>
+      <div class="payment__accepted-item">
+        <span class="payment__brand payment__brand--master">MC</span>
+        <span>Mastercard</span>
+      </div>
+      <div class="payment__accepted-item">
+        <span class="payment__brand payment__brand--pix">PIX</span>
+        <span>Pix</span>
+      </div>
+      <div class="payment__accepted-item">
+        <span class="payment__brand payment__brand--elo">ELO</span>
+        <span>Elo</span>
+      </div>
+    </div>
+
+    <div class="payment__info-box">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 8v4M12 16h.01" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <p>Seus dados de pagamento são criptografados e protegidos. O Vouya nunca armazena o número completo do seu cartão.</p>
+    </div>
+
+    <div class="scroll-spacer"></div>
+  </div>
+</section>
+
+<!-- BOTTOM SHEET: ADICIONAR CARTÃO -->
+<div class="sheet-backdrop" id="card-backdrop"></div>
+<div class="bottom-sheet bottom-sheet--form" id="card-sheet" role="dialog" aria-modal="true">
+  <div class="bottom-sheet__handle"></div>
+  <h2 class="form-sheet__title">Adicionar cartão</h2>
+  <form id="card-form" novalidate>
+    <div class="field">
+      <label class="field__label" for="card-number">Número do cartão</label>
+      <div class="field__control">
+        <svg class="field__icon" width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="2" y="5" width="20" height="14" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M2 10h20" stroke="currentColor" stroke-width="1.7"/></svg>
+        <input id="card-number" type="text" inputmode="numeric" placeholder="0000 0000 0000 0000" maxlength="19" required>
+      </div>
+      <p class="field-error" data-error-for="card-number" hidden>Número inválido.</p>
+    </div>
+    <div class="field-row-2">
+      <div class="field">
+        <label class="field__label" for="card-expiry">Validade</label>
+        <div class="field__control">
+          <input id="card-expiry" type="text" inputmode="numeric" placeholder="MM/AA" maxlength="5" required>
+        </div>
+        <p class="field-error" data-error-for="card-expiry" hidden>Validade inválida.</p>
+      </div>
+      <div class="field">
+        <label class="field__label" for="card-cvv">CVV</label>
+        <div class="field__control">
+          <input id="card-cvv" type="text" inputmode="numeric" placeholder="123" maxlength="3" required>
+        </div>
+        <p class="field-error" data-error-for="card-cvv" hidden>CVV inválido.</p>
+      </div>
+    </div>
+    <div class="field">
+      <label class="field__label" for="card-name">Nome no cartão</label>
+      <div class="field__control">
+        <input id="card-name" type="text" placeholder="Como aparece no cartão" required>
+      </div>
+      <p class="field-error" data-error-for="card-name" hidden>Informe o nome.</p>
+    </div>
+    <div class="form-sheet__actions">
+      <button type="button" class="btn btn--ghost btn--block" data-close-sheet="card">Cancelar</button>
+      <button type="submit" class="btn btn--primary btn--block">Adicionar</button>
+    </div>
+  </form>
+</div>
 
     <!-- ===================== BOTTOM NAVIGATION ===================== -->
     <nav class="bottom-nav is-hidden" id="bottom-nav">

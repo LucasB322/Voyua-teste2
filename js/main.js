@@ -15,9 +15,12 @@ import { initProfile } from './screens/profile.js';
 import { initNotifications } from './screens/notifications.js';
 import { initComposer, openReviewComposer } from './screens/composer.js';
 import { vibrate, qsa } from './utils/dom.js';
+import { initPayment } from './screens/payment.js';
+
 
 document.addEventListener('DOMContentLoaded', () => {
   Store.init();
+  initPayment();
 
   // Apply persisted theme before first render — prevents flash
   const { darkMode } = Store.getState().settings;

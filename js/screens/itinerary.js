@@ -5,6 +5,7 @@ import { showToast } from '../components/toast.js';
 import { openSheet, closeSheet } from '../components/sheet.js';
 import { escapeHtml, qs, qsa, vibrate } from '../utils/dom.js';
 import { uid } from '../utils/format.js';
+import { formatDateRange } from '../utils/dates.js';
 import { setFieldError, clearFieldError } from '../utils/validate.js';
 
 const STOP_ICON_EMOJI = { food: '🍴', sight: '📍', stay: '🏨', transit: '🚆' };
@@ -24,11 +25,36 @@ export function initItinerary() {
     if (!chip) return;
     _activeDay = Number(chip.dataset.day);
     qsa('.day-chip').forEach(c => c.classList.toggle('is-active', c === chip));
-    const state = Store.getState();
-    renderTimeline(activeTrip(state), _activeDay);
+    renderTimeline(activeTrip(Store.getState()), _activeDay);
   });
 
-  qs('#itinerary-share-btn').addEventListener('click', () => showToast('Itinerary link copied to clipboard'));
+  // ── Compartilhar itinerário ──────────────────────────────────────────
+  qs('#itinerary-share-btn').addEventListener('click', () => {
+    const state = Store.getState();
+    const trip = activeTrip(state);
+    if (!trip) return;
+    const text = `Meu itinerário — ${trip.place}\n${formatDateRange(trip.startDate, trip.endDate)}`;
+    if (navigator.share) {
+      navigator.share({ title: 'Vouya — Meu itinerário', text });
+    } else {
+      navigator.clipboard?.writeText(text);
+      showToast('Link do itinerário copiado para a prancheta');
+    }
+  });
+
+  // ── Abrir mapa completo ──────────────────────────────────────────────
+  qs('.map-preview__expand')?.addEventListener('click', () => {
+    const state = Store.getState();
+    const trip = activeTrip(state);
+    const dest = state.destinations.find(d => d.id === trip?.destinationId);
+    if (dest) {
+      window.open(
+        `https://www.google.com/maps/search/${encodeURIComponent(`${dest.name}, ${dest.country}`)}`,
+        '_blank'
+      );
+    }
+  });
+
   qs('#add-stop-btn').addEventListener('click', () => openSheet('stop'));
 
   initDragDrop();
@@ -39,7 +65,16 @@ function renderItinerary(state) {
   const trip = activeTrip(state);
   if (!trip) return;
   const dest = state.destinations.find(d => d.id === trip.destinationId);
-  qs('#itinerary-title').textContent = `${dest ? dest.name : trip.place.split(',')[0]} Itinerary`;
+
+  qs('#itinerary-title').textContent = `Itinerário de ${dest ? dest.name : trip.place.split(',')[0]}`;
+
+  // ── Atualiza mapa com destino real ───────────────────────────────────
+  const mapIframe = qs('#itinerary-map-iframe');
+  if (mapIframe && dest) {
+    const query = encodeURIComponent(`${dest.name} ${dest.country}`);
+    const newSrc = `https://maps.google.com/maps?q=${query}&output=embed&z=12`;
+    if (mapIframe.src !== newSrc) mapIframe.src = newSrc;
+  }
 
   const dayKeys = Object.keys(trip.days).map(Number).sort((a, b) => a - b);
   if (!dayKeys.includes(_activeDay)) _activeDay = dayKeys[0] || 1;
@@ -49,7 +84,7 @@ function renderItinerary(state) {
     const d = new Date(start);
     d.setDate(d.getDate() + (dayNum - 1));
     return `<button class="day-chip${dayNum === _activeDay ? ' is-active' : ''}" data-day="${dayNum}">
-      <span>${d.toLocaleDateString('en-US', { weekday: 'short' })}</span>
+      <span>${d.toLocaleDateString('pt-BR', { weekday: 'short' }).replace('.','').toUpperCase()}</span>
       <strong>${d.getDate()}</strong>
     </button>`;
   }).join('');
@@ -62,7 +97,12 @@ function renderTimeline(trip, dayNum) {
   const list = qs('#timeline-list');
 
   if (stops.length === 0) {
-    list.innerHTML = `<div class="empty-state"><div class="empty-state__icon">🗺️</div><p class="empty-state__title">Nothing planned yet</p><p class="empty-state__sub">Add your first stop for this day.</p></div>`;
+    list.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-state__icon">🗺️</div>
+        <p class="empty-state__title">Nada planejado ainda</p>
+        <p class="empty-state__sub">Adicione sua primeira parada para este dia.</p>
+      </div>`;
     return;
   }
 
@@ -79,7 +119,7 @@ function renderTimeline(trip, dayNum) {
           <h4>${escapeHtml(stop.title)}</h4>
           <p>${escapeHtml(stop.note || '')}</p>
         </div>
-        <button class="contact-row__delete" data-delete-stop="${stop.id}" aria-label="Remove stop">
+        <button class="contact-row__delete" data-delete-stop="${stop.id}" aria-label="Remover parada">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0l-1 14a2 2 0 01-2 2H7a2 2 0 01-2-2L4 6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
       </div>
@@ -118,11 +158,10 @@ function initDragDrop() {
     over.after(dragEl);
     saveReorder(list);
     over.classList.remove('drag-over');
-    showToast('Itinerary order updated');
+    showToast('Ordem do itinerário atualizada');
     vibrate(10);
   });
 
-  // Touch long-press drag
   let touchItem = null, touchStartY = 0, longPressTimer = null;
 
   list.addEventListener('touchstart', (e) => {
@@ -152,7 +191,7 @@ function initDragDrop() {
       if (items.indexOf(touchItem) < items.indexOf(target)) target.after(touchItem);
       else target.before(touchItem);
       saveReorder(list);
-      showToast('Itinerary order updated');
+      showToast('Ordem do itinerário atualizada');
       vibrate(10);
     }
     touchItem.classList.remove('is-dragging');
@@ -202,16 +241,15 @@ function initStopForm() {
     closeSheet('stop');
     e.target.reset();
     qs('#stop-icon').value = 'sight';
-    showToast('Stop added to your day');
+    showToast('Parada adicionada ao seu dia');
   });
 }
 
-// Called from global event delegation for delete-stop
 export function handleDeleteStop(stopId) {
   const state = Store.getState();
   const trip = activeTrip(state);
   if (!trip) return;
   removeStop(trip.id, _activeDay, stopId);
   renderTimeline(activeTrip(Store.getState()), _activeDay);
-  showToast('Stop removed', { type: 'danger' });
+  showToast('Parada removida', { type: 'danger' });
 }
