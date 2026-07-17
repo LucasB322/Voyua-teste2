@@ -34,8 +34,7 @@ export function initProfile() {
   });
 
   qs('#payment-methods-btn').addEventListener('click', () => {
-    const pm = Store.getState().paymentMethods[0];
-    showToast(pm ? `${pm.brand} ending in ${pm.last4} is your default card` : 'No payment method on file yet');
+    Router.go('payment');
   });
 
   qs('#edit-profile-btn').addEventListener('click', () => {

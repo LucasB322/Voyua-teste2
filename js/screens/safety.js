@@ -17,6 +17,8 @@ export function initSafety() {
 
   initSosButton();
   initContactForm();
+  // initCheckinForm();
+  initShareLocation();
 }
 
 export function renderSafety() {
@@ -205,6 +207,52 @@ export function handleDeleteContact(contactId) {
   removeEmergencyContact(contactId);
   renderSafety();
   showToast('Contact removed', { type: 'danger' });
+}
+
+function initShareLocation() {
+  const btn = qs('#share-location-btn');
+  if (!btn) return;
+
+  btn.addEventListener('click', () => {
+    const state = Store.getState();
+    const trip = state.trips.find(t => t.status === 'upcoming') || state.trips[0];
+    const dest = trip ? state.destinations.find(d => d.id === trip.destinationId) : null;
+
+    // Monta os dados para o link
+    const data = {
+      name: state.profile.name,
+      dest: dest ? `${dest.name}, ${dest.country}` : 'Em viagem',
+      dates: trip ? `${trip.startDate} a ${trip.endDate}` : '',
+      status: 'protegida',
+      ts: Date.now(),
+    };
+
+    // Codifica os dados na URL (funciona sem servidor)
+    const encoded = btoa(encodeURIComponent(JSON.stringify(data)));
+    const base = window.location.origin + window.location.pathname.replace('index.html', '');
+    const link = `${base}acompanhar.html?v=${encoded}`;
+
+    qs('#sharelink-url').textContent = link;
+
+    // Botão copiar
+    qs('#sharelink-copy-btn').onclick = () => {
+      navigator.clipboard?.writeText(link);
+      showToast('Link copiado!');
+      vibrate(15);
+    };
+
+    // Botão WhatsApp
+    qs('#sharelink-whatsapp-btn').onclick = () => {
+      const msg = `Olá! Estou viajando e quero que você possa acompanhar minha viagem pelo Vouya.\n\nDestino: ${data.dest}\nDatas: ${data.dates}\n\nAcesse aqui: ${link}`;
+      window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+    };
+
+    openSheet('sharelink');
+    addSafetyActivity('🔗', 'Link de acompanhamento gerado e compartilhado');
+  });
+
+  qs('#sharelink-backdrop')?.addEventListener('click', () => closeSheet('sharelink'));
+  qsa('[data-close-sheet="sharelink"]').forEach(b => b.addEventListener('click', () => closeSheet('sharelink')));
 }
 
 export function handleCallContact(contactId) {
