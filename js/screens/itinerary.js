@@ -49,7 +49,7 @@ function renderItinerary(state) {
     const d = new Date(start);
     d.setDate(d.getDate() + (dayNum - 1));
     return `<button class="day-chip${dayNum === _activeDay ? ' is-active' : ''}" data-day="${dayNum}">
-      <span>${d.toLocaleDateString('en-US', { weekday: 'short' })}</span>
+      <span>${d.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase()}</span>
       <strong>${d.getDate()}</strong>
     </button>`;
   }).join('');
