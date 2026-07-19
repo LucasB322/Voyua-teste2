@@ -15,6 +15,8 @@ import { initProfile } from './screens/profile.js';
 import { initNotifications } from './screens/notifications.js';
 import { initComposer, openReviewComposer } from './screens/composer.js';
 import { vibrate, qsa } from './utils/dom.js';
+import { initCurrency } from './screens/currency.js';
+
 
 document.addEventListener('DOMContentLoaded', () => {
   Store.init();
@@ -39,6 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initProfile();
   initNotifications();
   initComposer();
+  initCurrency();
 
   // ── Global event delegation ──────────────────────────────────────────────
   // Handles generic data-* attributes that are used across multiple screens.

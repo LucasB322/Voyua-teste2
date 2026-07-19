@@ -201,7 +201,7 @@
               <span class="quick-action__icon quick-action__icon--red"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 3l7 3v5c0 5-3.2 8-7 10-3.8-2-7-5-7-10V6l7-3z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></span>
               <span>Safety</span>
             </button>
-            <button class="quick-action" data-toast="Currency converter coming soon">
+            <button class="quick-action" data-nav="currency">
               <span class="quick-action__icon quick-action__icon--amber"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M9 9.5c0-1 1-1.8 2.5-1.8s2.7.8 2.7 2-1.2 1.7-2.7 2-2.5 1-2.5 2 1.2 1.8 2.7 1.8 2.5-.8 2.5-1.8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
               <span>Currency</span>
             </button>
@@ -648,6 +648,27 @@
         <button class="btn btn--primary btn--block btn--lg" id="confirm-booking-btn">Confirm & add to trips</button>
       </div>
     </section>
+
+    <!-- ===================== SCREEN: CURRENCY ===================== -->
+  <section class="screen screen--currency" data-screen-id="currency">
+    <header class="page-head">
+      <button class="icon-btn" data-back aria-label="Go back">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <h1 class="page-head__title">Currency</h1>
+      <span style="width:40px"></span>
+    </header>
+
+    <div class="currency__scroll" data-scroll>
+      <p class="currency__hint">Select your preferred currency for displaying prices.</p>
+      <div class="currency-list" id="currency-list"></div>
+      <div class="scroll-spacer"></div>
+    </div>
+
+    <div class="detail__cta">
+      <button class="btn btn--primary btn--block btn--lg" id="save-currency-btn">Save currency</button>
+    </div>
+  </section>
 
     <!-- ===================== BOTTOM NAVIGATION ===================== -->
     <nav class="bottom-nav is-hidden" id="bottom-nav">

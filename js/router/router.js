@@ -1,7 +1,7 @@
 const _history = [];
 const _handlers = {};
-const SCREENS_WITH_NAV = new Set(['home', 'explore', 'trips', 'feed', 'safety', 'profile']);
-const ROOT_SCREENS = new Set(['home', 'explore', 'trips', 'feed', 'safety', 'profile']);
+const SCREENS_WITH_NAV = new Set(['home', 'explore', 'trips', 'feed', 'safety', 'profile', 'currency']);
+const ROOT_SCREENS = new Set(['home', 'explore', 'trips', 'feed', 'safety', 'profile', 'currency']);
 
 const $bottomNav = () => document.getElementById('bottom-nav');
 
