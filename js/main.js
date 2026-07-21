@@ -14,8 +14,11 @@ import { initSafety, handleDeleteContact, handleCallContact } from './screens/sa
 import { initProfile } from './screens/profile.js';
 import { initNotifications } from './screens/notifications.js';
 import { initComposer, openReviewComposer } from './screens/composer.js';
+import { initPayment } from './screens/payment.js';
 import { vibrate, qsa } from './utils/dom.js';
 import { initCurrency } from './screens/currency.js';
+import { initAIPlanner } from './screens/ai-planner.js';
+
 
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -40,8 +43,11 @@ document.addEventListener('DOMContentLoaded', () => {
   initSafety();
   initProfile();
   initNotifications();
-  initComposer();
+  initPayment();
   initCurrency();
+  initComposer();
+  initAIPlanner();
+
 
   // ── Global event delegation ──────────────────────────────────────────────
   // Handles generic data-* attributes that are used across multiple screens.

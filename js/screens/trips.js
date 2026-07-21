@@ -37,4 +37,11 @@ function render(state) {
   qs('#trips-past').innerHTML = past.length
     ? past.map(pastTripCardHtml).join('')
     : `<div class="empty-state"><div class="empty-state__icon">📷</div><p class="empty-state__title">No past trips yet</p><p class="empty-state__sub">Completed trips will show up here.</p></div>`;
+  document.querySelectorAll('[data-open-trip]').forEach(el => {
+    el.addEventListener('click', () => {
+      const tripId = el.dataset.openTrip;
+      Store.setState(s => ({ ...s, activeTripId: tripId }));
+      Router.go('itinerary');
+    });
+  });
 }

@@ -17,6 +17,8 @@ export function initSafety() {
 
   initSosButton();
   initContactForm();
+  // initCheckinForm();
+  initShareLocation();
 }
 
 export function renderSafety() {
@@ -198,6 +200,50 @@ function initContactForm() {
     e.target.reset();
     showToast(`${nameInput.value.trim()} added as an emergency contact`);
   });
+}
+
+function initShareLocation() {
+  const btn = qs('#share-location-btn');
+  if (!btn) return;
+
+  btn.addEventListener('click', () => {
+    const state = Store.getState();
+    const trip = state.trips.find(t => t.status === 'upcoming') || state.trips[0];
+    const dest = trip ? state.destinations.find(d => d.id === trip.destinationId) : null;
+
+    const data = {
+      name: state.profile.name,
+      dest: dest ? `${dest.name}, ${dest.country}` : 'On a trip',
+      dates: trip ? `${trip.startDate} to ${trip.endDate}` : '',
+      status: 'protected',
+      ts: Date.now(),
+    };
+
+    const encoded = btoa(encodeURIComponent(JSON.stringify(data)));
+    const base = window.location.origin + window.location.pathname.replace('index.html', '');
+    const link = `${base}acompanhar.html?v=${encoded}`;
+
+    const urlEl = qs('#sharelink-url');
+    urlEl.textContent = link;
+    urlEl.href = link;
+
+    qs('#sharelink-copy-btn').onclick = () => {
+      navigator.clipboard?.writeText(link);
+      showToast('Link copied!');
+      vibrate(15);
+    };
+
+    qs('#sharelink-whatsapp-btn').onclick = () => {
+      const msg = `Hi! I'm traveling and want you to follow my trip on Vouya.\n\nDestination: ${data.dest}\nDates: ${data.dates}\n\nAccess here: ${link}`;
+      window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+    };
+
+    openSheet('sharelink');
+    addSafetyActivity('🔗', 'Location sharing link generated');
+  });
+
+  qs('#sharelink-backdrop')?.addEventListener('click', () => closeSheet('sharelink'));
+  qsa('[data-close-sheet="sharelink"]').forEach(b => b.addEventListener('click', () => closeSheet('sharelink')));
 }
 
 // Called from global delegation

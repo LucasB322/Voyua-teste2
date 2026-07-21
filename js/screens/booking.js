@@ -7,6 +7,11 @@ import { formatDateRange } from '../utils/dates.js';
 import { uid } from '../utils/format.js';
 import { qs, vibrate } from '../utils/dom.js';
 
+function formatPrice(price) {
+  const cur = window._activeCurrency || { symbol: '$', code: 'USD' };
+  return `${cur.symbol}${price}`;
+}
+
 let _draft = null;
 
 export function initBooking() {
@@ -43,7 +48,7 @@ function renderBooking(state) {
     <div class="booking-summary__body">
       <h3>${dest.name}</h3>
       <p>${dest.country} · <span class="rating">★ ${dest.rating}</span></p>
-      <p>$${dest.price} / person</p>
+      <p>$${formatPrice(dest.price)} / person</p>
     </div>`;
 
   qs('#booking-start').value = _draft.start;
@@ -56,10 +61,47 @@ function renderBooking(state) {
 
   const subtotal = dest.price * _draft.travelers;
   const protCost = _draft.protection ? Math.round(subtotal * 0.08) : 0;
+  
+  // Payment method
+  const cards = (window._voucherCards && window._voucherCards.length > 0)
+    ? window._voucherCards
+    : [{ id: 'card-default', brand: 'Visa', last4: '4242', expiry: '12/26', name: 'Amelia Cross', isDefault: true }];
+  const def = cards.find(c => c.isDefault) || cards[0];
+
+  // Payment method
+  const paymentHtml = `
+    <div class="booking-payment-box">
+      <div class="booking-payment-method is-selected">
+        <div class="booking-payment-method__left">
+          <div class="payment__brand payment__brand--${def.brand === 'Visa' ? 'visa' : def.brand === 'Mastercard' ? 'master' : 'generic'}">${def.brand.slice(0,4).toUpperCase()}</div>
+          <div class="booking-payment-method__info">
+            <strong>${def.brand} •••• ${def.last4}</strong>
+            <span>Valid until ${def.expiry}</span>
+          </div>
+        </div>
+        <span class="booking-payment-method__check">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </div>
+      <button class="booking-payment-method" id="booking-add-payment">
+        <div class="booking-payment-method__left">
+          <div class="booking-payment-method__icon">＋</div>
+          <div class="booking-payment-method__info">
+            <strong>Add payment method</strong>
+            <span>Credit card, debit or Pix</span>
+          </div>
+        </div>
+      </button>
+    </div>`;
+
+  qs('#booking-payment').innerHTML = paymentHtml;
+  qs('#booking-add-payment')?.addEventListener('click', () => Router.go('payment'));
+
   qs('#booking-total').innerHTML = `
-    <div class="booking-total__row"><span>${dest.name} × ${_draft.travelers}</span><span>$${subtotal.toLocaleString()}</span></div>
-    <div class="booking-total__row"><span>Vouya Shield protection</span><span>${_draft.protection ? `$${protCost.toLocaleString()}` : 'Not included'}</span></div>
-    <div class="booking-total__row is-total"><span>Total</span><span>$${(subtotal + protCost).toLocaleString()}</span></div>`;
+    <div class="booking-total__row"><span>${dest.name} × ${_draft.travelers}</span><span>${formatPrice(subtotal.toLocaleString())}</span></div>
+    <div class="booking-total__row"><span>Vouya Shield protection</span><span>${_draft.protection ? formatPrice(protCost.toLocaleString()) : 'Not included'}</span></div>
+    <div class="booking-total__row is-total"><span>Total</span><span>${formatPrice((subtotal + protCost).toLocaleString())}</span></div>
+  `;
 }
 
 function validateDates() {

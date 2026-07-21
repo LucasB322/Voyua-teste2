@@ -13,7 +13,9 @@ const STOP_ICON_CLASS = { food: 'food', sight: 'sight', stay: 'stay', transit: '
 let _activeDay = 1;
 
 function activeTrip(state) {
-  return state.trips.find(t => t.id === state.activeTripId) || state.trips[0];
+  return state.trips.find(t => t.id === state.activeTripId) 
+  || state.trips.find(t => t.status === 'upcoming')
+  || state.trips[0];
 }
 
 export function initItinerary() {
@@ -28,7 +30,27 @@ export function initItinerary() {
     renderTimeline(activeTrip(state), _activeDay);
   });
 
-  qs('#itinerary-share-btn').addEventListener('click', () => showToast('Itinerary link copied to clipboard'));
+  qs('#itinerary-share-btn').addEventListener('click', () => {
+    const state = Store.getState();
+    const trip = activeTrip(state);
+    if (!trip) return;
+    const text = `My itinerary - ${trip.place}`;
+    if (navigator.share) {
+      navigator.share({title: 'Vouya -My itinerary', text});
+    } else {
+      navigator.clipboard.writeText(text);
+      showToast('Itinerary link copied to clipboard');
+    }
+  });
+  qs('.map-preview__expand')?.addEventListener('click', () => {
+    const state = Store.getState();
+    const trip = activeTrip(state);
+    const dest = state.destinations.find(d => d.id === trip?.destinationId);
+    if (dest) window.open(
+      `https://www.google.com/maps/search/${encodeURIComponent(`${dest.name}, ${dest.country}`)}`,
+      '_blank'
+    );
+  });
   qs('#add-stop-btn').addEventListener('click', () => openSheet('stop'));
 
   initDragDrop();
@@ -39,6 +61,12 @@ function renderItinerary(state) {
   const trip = activeTrip(state);
   if (!trip) return;
   const dest = state.destinations.find(d => d.id === trip.destinationId);
+  const mapIframe = qs('#itinerary-map-iframe');
+  if (mapIframe && dest) {
+    const query = encodeURIComponent(`${dest.name}, ${dest.country}`);
+    const newSrc = `https://maps.google.com/maps?q=${query}&output=embed&z=12`;
+    if (mapIframe.src !== newSrc) mapIframe.src = newSrc;
+  }
   qs('#itinerary-title').textContent = `${dest ? dest.name : trip.place.split(',')[0]} Itinerary`;
 
   const dayKeys = Object.keys(trip.days).map(Number).sort((a, b) => a - b);

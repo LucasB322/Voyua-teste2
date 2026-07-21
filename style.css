@@ -72,6 +72,7 @@
   --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.55);
 }
 
+
 /* ============================== RESET ==================================== */
 *, *::before, *::after { box-sizing: border-box; }
 html, body {
@@ -1694,4 +1695,607 @@ button:focus-visible, input:focus-visible, [tabindex]:focus-visible {
   left: 0; right: 0;
   padding: 14px var(--page-pad);
   background: linear-gradient(180deg, transparent, var(--color-bg) 30%);
+}
+
+/* ============================== BOOKING PAYMENT BOX ==================== */
+.booking-payment-box {
+  display: flex; flex-direction: column; gap: 8px;
+  margin-bottom: 4px;
+}
+.booking-payment-method {
+  display: flex; align-items: center; justify-content: space-between;
+  width: 100%; text-align: left;
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--r-md);
+  padding: 12px 14px;
+  transition: border-color var(--dur-fast);
+  cursor: pointer;
+}
+.booking-payment-method.is-selected {
+  border-color: var(--color-primary);
+  background: var(--color-primary-light);
+}
+.booking-payment-method__left {
+  display: flex; align-items: center; gap: 12px;
+}
+.booking-payment-method__icon {
+  width: 48px; height: 32px; border-radius: 6px;
+  background: var(--color-gray-light);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; color: var(--color-gray);
+  flex-shrink: 0;
+}
+.booking-payment-method__info { display: flex; flex-direction: column; gap: 2px; }
+.booking-payment-method__info strong { font-size: 13px; font-weight: 600; color: var(--color-text); }
+.booking-payment-method__info span { font-size: 11px; color: var(--color-gray); }
+.booking-payment-method__check {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--color-primary);
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; flex-shrink: 0;
+}
+/* ============================== PAYMENT METHODS ========================= */
+.payment__scroll { flex: 1; overflow-y: auto; padding: 0 var(--page-pad); display: flex; flex-direction: column; gap: 14px; padding-top: 8px; }
+.payment__section-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-gray); margin-bottom: -4px; }
+
+.card-row {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--r-md);
+  padding: 14px;
+  box-shadow: var(--shadow-sm);
+}
+.card-row__body { flex: 1; display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.card-row__body strong { font-size: 14px; font-weight: 600; }
+.card-row__body span { font-size: 12px; color: var(--color-gray); }
+.card-row__actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+.payment__brand {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 48px; height: 32px; border-radius: 6px;
+  font-size: 10px; font-weight: 800; letter-spacing: 0.04em;
+  flex-shrink: 0;
+}
+.payment__brand--visa    { background: #1A1F71; color: #fff; }
+.payment__brand--master  { background: #EB001B; color: #fff; }
+.payment__brand--pix     { background: #32BCAD; color: #fff; }
+.payment__brand--elo     { background: #FFD700; color: #333; }
+.payment__brand--generic { background: var(--color-gray-light); color: var(--color-gray); }
+
+.card-badge {
+  font-size: 11px; font-weight: 600;
+  padding: 4px 10px; border-radius: var(--r-pill);
+  white-space: nowrap; border: none;
+}
+.card-badge--default { background: var(--color-secondary-light); color: #067a56; }
+.card-badge--set { background: var(--color-bg); color: var(--color-primary); border: 1px solid var(--color-primary); cursor: pointer; }
+
+.payment__accepted { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.payment__accepted-item { display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 11px; color: var(--color-gray); font-weight: 500; }
+
+.payment__info-box {
+  display: flex; align-items: flex-start; gap: 10px;
+  background: var(--color-primary-light);
+  border-radius: var(--r-md);
+  padding: 12px 14px;
+  color: var(--color-primary);
+}
+.payment__info-box svg { flex-shrink: 0; margin-top: 2px; }
+.payment__info-box p { font-size: 12px; line-height: 1.6; }
+
+/* ============================== BOOKING PAYMENT BOX ==================== */
+.booking-payment-box { display: flex; flex-direction: column; gap: 8px; margin-bottom: 4px; }
+.booking-payment-method {
+  display: flex; align-items: center; justify-content: space-between;
+  width: 100%; text-align: left;
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--r-md);
+  padding: 12px 14px;
+  cursor: pointer;
+  transition: border-color var(--dur-fast);
+}
+.booking-payment-method.is-selected { border-color: var(--color-primary); background: var(--color-primary-light); }
+.booking-payment-method__left { display: flex; align-items: center; gap: 12px; }
+.booking-payment-method__icon {
+  width: 48px; height: 32px; border-radius: 6px;
+  background: var(--color-gray-light);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; color: var(--color-gray); flex-shrink: 0;
+}
+.booking-payment-method__info { display: flex; flex-direction: column; gap: 2px; }
+.booking-payment-method__info strong { font-size: 13px; font-weight: 600; color: var(--color-text); }
+.booking-payment-method__info span { font-size: 11px; color: var(--color-gray); }
+.booking-payment-method__check {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--color-primary);
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; flex-shrink: 0;
+}
+
+/* ============================== PAY METHODS (Buser style) =============== */
+.pay-methods {
+  display: flex; flex-direction: column;
+  border: 1px solid var(--color-border);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background: var(--color-surface);
+  margin-bottom: 20px;
+}
+.pay-method {
+  display: flex; align-items: center; gap: 14px;
+  width: 100%; text-align: left;
+  padding: 14px 16px;
+  background: var(--color-surface);
+  border: none;
+  border-bottom: 1px solid var(--color-border);
+  transition: background var(--dur-fast);
+  cursor: pointer;
+}
+.pay-method:last-child { border-bottom: none; }
+.pay-method:active { background: var(--color-bg); }
+.pay-method--active { background: var(--color-primary-light); }
+.pay-method__icon {
+  width: 44px; height: 30px; border-radius: 6px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 800; color: #fff;
+}
+.pay-method__info { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.pay-method__info strong { font-size: 14px; font-weight: 600; color: var(--color-text); }
+.pay-method__info span { font-size: 12px; color: var(--color-gray); }
+.pay-method__arrow { color: var(--color-gray); flex-shrink: 0; }
+
+.pay-coupon {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--r-lg);
+  padding: 16px;
+  margin-bottom: 16px;
+}
+.pay-coupon__title { font-size: 14px; font-weight: 600; margin-bottom: 10px; }
+.pay-coupon__row { display: flex; gap: 8px; }
+.pay-coupon__input {
+  flex: 1; padding: 10px 14px;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--r-md);
+  font-size: 14px; background: var(--color-bg);
+  color: var(--color-text);
+  outline: none;
+}
+.pay-coupon__input:focus { border-color: var(--color-primary); }
+.pay-coupon__btn {
+  padding: 10px 18px;
+  background: var(--color-primary); color: #fff;
+  border: none; border-radius: var(--r-md);
+  font-size: 14px; font-weight: 600; cursor: pointer;
+  transition: opacity var(--dur-fast);
+}
+.pay-coupon__btn:active { opacity: 0.85; }
+.pay-coupon__msg { font-size: 13px; margin-top: 8px; }
+
+/* ============================== PIX SHEET =============================== */
+.pix-box { display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 8px 0 16px; }
+.pix-qr {
+  background: white;
+  border-radius: var(--r-md);
+  padding: 16px;
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+}
+.pix-box__label { font-size: 13px; color: var(--color-gray); text-align: center; }
+.pix-box__key-row {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--color-bg);
+  border: 1.5px solid var(--color-primary);
+  border-radius: var(--r-md);
+  padding: 10px 14px;
+  width: 100%;
+}
+.pix-box__key { flex: 1; font-size: 13px; font-weight: 600; color: var(--color-primary); word-break: break-all; }
+.pix-box__info { font-size: 12px; color: var(--color-gray); text-align: center; line-height: 1.5; }
+.pix-box__timer {
+  font-size: 13px; color: var(--color-amber);
+  background: var(--color-bg);
+  border-radius: var(--r-md);
+  padding: 8px 16px;
+  border: 1px solid var(--color-border);
+}
+/* ============================== SHARE LOCATION ========================== */
+.share-location-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--r-md);
+  padding: 14px;
+  display: flex; flex-direction: column; gap: 14px;
+  box-shadow: var(--shadow-sm);
+}
+.share-location-card__info { display: flex; align-items: flex-start; gap: 12px; }
+.share-location-card__icon { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
+.share-location-card__info strong { font-size: 14px; font-weight: 600; display: block; margin-bottom: 3px; }
+.share-location-card__info p { font-size: 12px; color: var(--color-gray); line-height: 1.5; }
+
+.sharelink-box {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--color-bg);
+  border: 1.5px solid var(--color-primary);
+  border-radius: var(--r-md);
+  padding: 10px 14px;
+  margin-bottom: 12px;
+}
+.sharelink-actions { display: flex; flex-direction: column; gap: 10px; }
+
+/* ============================== DARK MODE FIXES ========================= */
+[data-theme="dark"] .pay-method {
+  background: var(--color-surface);
+  border-color: var(--color-border);
+}
+[data-theme="dark"] .pay-method__info strong,
+[data-theme="dark"] .pay-method__info span,
+[data-theme="dark"] .card-row__body strong,
+[data-theme="dark"] .card-row__body span,
+[data-theme="dark"] .booking-total__row span,
+[data-theme="dark"] .booking-total__row strong,
+[data-theme="dark"] .booking-payment-method__info strong,
+[data-theme="dark"] .booking-payment-method__info span,
+[data-theme="dark"] .currency-row__body strong,
+[data-theme="dark"] .currency-row__body span,
+[data-theme="dark"] .checkin-card__place,
+[data-theme="dark"] .checkin-card__time,
+[data-theme="dark"] .share-location-card__info strong,
+[data-theme="dark"] .share-location-card__info p,
+[data-theme="dark"] .section__title,
+[data-theme="dark"] .page-head__title,
+[data-theme="dark"] .payment__section-label,
+[data-theme="dark"] .pay-coupon__title,
+[data-theme="dark"] .pix-box__label,
+[data-theme="dark"] .pix-box__info {
+  color: var(--color-text);
+}
+
+[data-theme="dark"] .pay-methods,
+[data-theme="dark"] .pay-coupon,
+[data-theme="dark"] .card-row,
+[data-theme="dark"] .share-location-card,
+[data-theme="dark"] .checkin-card,
+[data-theme="dark"] .booking-payment-method,
+[data-theme="dark"] .currency-row,
+[data-theme="dark"] .pix-box__key-row {
+  background: var(--color-surface);
+  border-color: var(--color-border);
+}
+
+[data-theme="dark"] .pay-coupon__input {
+  background: var(--color-bg);
+  color: var(--color-text);
+  border-color: var(--color-border);
+}
+
+[data-theme="dark"] .pix-qr { 
+  background: white; 
+}
+
+[data-theme="dark"] .payment__info-box {
+  background: var(--color-primary-light);
+  color: #93C5FD;
+}
+
+[data-theme="dark"] .booking-payment-method.is-selected {
+  background: var(--color-primary-light);
+  border-color: var(--color-primary);
+}
+
+[data-theme="dark"] .currency-row.is-selected {
+  background: var(--color-primary-light);
+  border-color: var(--color-primary);
+}
+
+[data-theme="dark"] .dest-card__body h4,
+[data-theme="dark"] .dest-card__body p,
+[data-theme="dark"] .dest-row__body h4,
+[data-theme="dark"] .dest-row__body p {
+  color: var(--color-text);
+}
+
+/* ============================== DARK MODE FIXES 2 ======================= */
+[data-theme="dark"] .home__name,
+[data-theme="dark"] .home__greeting,
+[data-theme="dark"] .mini-card__big,
+[data-theme="dark"] .mini-card__label,
+[data-theme="dark"] .mini-card,
+[data-theme="dark"] .mini-card__row,
+[data-theme="dark"] .contact-row__body strong,
+[data-theme="dark"] .contact-row__body span,
+[data-theme="dark"] .activity-row__body strong,
+[data-theme="dark"] .activity-row__body span,
+[data-theme="dark"] .checkin-card__status,
+[data-theme="dark"] .dest-card__body h4,
+[data-theme="dark"] .dest-card__body p,
+[data-theme="dark"] .dest-row__price strong,
+[data-theme="dark"] .dest-row__price span,
+[data-theme="dark"] .trip-card h3,
+[data-theme="dark"] .trip-card p,
+[data-theme="dark"] .section__title,
+[data-theme="dark"] .form-sheet__title,
+[data-theme="dark"] .field__label,
+[data-theme="dark"] .notif-row__body strong,
+[data-theme="dark"] .notif-row__body p,
+[data-theme="dark"] .profile__name,
+[data-theme="dark"] .profile__tier,
+[data-theme="dark"] .stat-card__val,
+[data-theme="dark"] .stat-card__label,
+[data-theme="dark"] .pref-row__label,
+[data-theme="dark"] .pref-row__sub,
+[data-theme="dark"] .safety-strip__title,
+[data-theme="dark"] .safety-strip__sub,
+[data-theme="dark"] .safety-map__label strong,
+[data-theme="dark"] .safety-map__label span,
+[data-theme="dark"] .checkin-empty p,
+[data-theme="dark"] .booking-summary__body h3,
+[data-theme="dark"] .booking-summary__body p,
+[data-theme="dark"] .quick-action span,
+[data-theme="dark"] .day-chip span,
+[data-theme="dark"] .day-chip strong,
+[data-theme="dark"] .timeline__body h4,
+[data-theme="dark"] .timeline__body p,
+[data-theme="dark"] .timeline__time {
+  color: var(--color-text) !important;
+}
+
+[data-theme="dark"] .mini-card {
+  background: var(--color-surface);
+  border-color: var(--color-border);
+}
+
+[data-theme="dark"] .quick-action {
+  background: var(--color-surface);
+}
+
+[data-theme="dark"] .day-chip {
+  background: var(--color-surface);
+  border-color: var(--color-border);
+}
+
+[data-theme="dark"] .day-chip.is-active {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+[data-theme="dark"] .day-chip.is-active span,
+[data-theme="dark"] .day-chip.is-active strong {
+  color: #fff !important;
+}
+
+[data-theme="dark"] .timeline__card {
+  background: var(--color-surface);
+  border-color: var(--color-border);
+}
+
+[data-theme="dark"] .notif-row {
+  background: var(--color-surface);
+  border-color: var(--color-border);
+}
+
+[data-theme="dark"] .dest-row {
+  background: var(--color-surface);
+  border-color: var(--color-border);
+}
+
+/* ============================== DARK MODE FIXES 3 ======================= */
+
+/* Home — Next trip badge e preços */
+[data-theme="dark"] .badge--light {
+  background: rgba(255,255,255,0.15);
+  color: #fff !important;
+}
+[data-theme="dark"] .dest-card__price {
+  background: rgba(0,0,0,0.6);
+  color: #fff !important;
+}
+
+/* Home — trip hero (Kyoto card) */
+[data-theme="dark"] .trip-hero__body { color: #fff; }
+[data-theme="dark"] .trip-hero__place { color: #fff !important; }
+[data-theme="dark"] .trip-hero__dates { color: rgba(255,255,255,0.85) !important; }
+
+/* Profile — nome e tier */
+[data-theme="dark"] .profile__name { color: var(--color-text) !important; }
+[data-theme="dark"] .profile__tier { color: var(--color-gray) !important; }
+
+/* Safety — bateria, conexão, advisories */
+[data-theme="dark"] .device-stat__val { color: var(--color-text) !important; }
+[data-theme="dark"] .device-stat__label { color: var(--color-gray) !important; }
+[data-theme="dark"] .advisory-row { 
+  background: var(--color-surface); 
+  border-color: var(--color-border); 
+}
+[data-theme="dark"] .advisory-row__title { color: var(--color-text) !important; }
+[data-theme="dark"] .advisory-row__sub { color: var(--color-gray) !important; }
+[data-theme="dark"] .advisory-row__badge { color: var(--color-text) !important; }
+
+/* Feed — nomes e textos */
+[data-theme="dark"] .post-card { 
+  background: var(--color-surface); 
+  border-color: var(--color-border); 
+}
+[data-theme="dark"] .post-card__author { color: var(--color-text) !important; }
+[data-theme="dark"] .post-card__dest { color: var(--color-gray) !important; }
+[data-theme="dark"] .post-card__text { color: var(--color-text) !important; }
+[data-theme="dark"] .post-card__meta { color: var(--color-gray) !important; }
+
+/* Explore — preços nas viagens da home */
+[data-theme="dark"] .dest-row__price strong { color: var(--color-text) !important; }
+[data-theme="dark"] .dest-row__price span { color: var(--color-gray) !important; }
+[data-theme="dark"] .dest-card__body h4 { color: var(--color-text) !important; }
+[data-theme="dark"] .dest-card__body p { color: var(--color-gray) !important; }
+
+/* Badge "In X days" no trip hero */
+[data-theme="dark"] .trip-hero__body .badge--light {
+  background: rgba(0,0,0,0.6);
+  color: #fff !important;
+}
+
+/* Safety — mapa e localização */
+[data-theme="dark"] .safety-map {
+  background: var(--color-surface);
+  border-color: var(--color-border);
+}
+[data-theme="dark"] .safety-map__label {
+  background: var(--color-surface);
+  border-color: var(--color-border);
+}
+[data-theme="dark"] .safety-map__label strong,
+[data-theme="dark"] .safety-map__label span {
+  color: var(--color-text) !important;
+}
+
+[data-theme="dark"] .status-card {
+  background: var(--color-surface);
+  border-color: var(--color-border);
+}
+[data-theme="dark"] .status-card strong,
+[data-theme="dark"] .status-card span,
+[data-theme="dark"] .status-card p {
+  color: var(--color-text) !important;
+}
+[data-theme="dark"] #profile-name {
+  color: var(--color-text) !important;
+}
+
+[data-theme="dark"] .post-card {
+  background: var(--color-surface);
+  border-color: var(--color-border);
+}
+[data-theme="dark"] .post-card * {
+  color: var(--color-text) !important;
+}
+[data-theme="dark"] .post-card .rating {
+  color: var(--color-amber) !important;
+}
+
+/* ============================== AI PLANNER ============================== */
+.ai-planner-banner {
+  display: flex; align-items: center; justify-content: space-between;
+  background: linear-gradient(135deg, #1E3A5F, #2563EB);
+  border-radius: var(--r-lg);
+  padding: 14px 16px;
+  margin: 0 var(--page-pad) 12px;
+  gap: 12px;
+}
+.ai-planner-banner__left { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+.ai-planner-banner__icon { font-size: 22px; flex-shrink: 0; }
+.ai-planner-banner strong { font-size: 14px; font-weight: 600; color: #fff; display: block; margin-bottom: 2px; }
+.ai-planner-banner p { font-size: 11px; color: rgba(255,255,255,0.75); line-height: 1.4; }
+
+.ai-planner-head { display: flex; align-items: center; gap: 8px; flex: 1; }
+.ai-planner-head__icon { font-size: 20px; }
+.ai-planner-head__sub { font-size: 11px; color: var(--color-gray); display: block; margin-top: 1px; }
+
+.screen--ai-planner { display: flex; flex-direction: column; }
+
+.ai-chat {
+  flex: 1; overflow-y: auto;
+  padding: 16px var(--page-pad);
+  display: flex; flex-direction: column; gap: 16px;
+}
+
+.ai-message { display: flex; align-items: flex-end; gap: 8px; }
+.ai-message--user { flex-direction: row-reverse; }
+
+.ai-message__avatar {
+  width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+  background: linear-gradient(135deg, #1E3A5F, #2563EB);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+}
+
+.ai-message__bubble {
+  max-width: 78%;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 18px 18px 18px 4px;
+  padding: 12px 14px;
+  font-size: 13px; line-height: 1.6;
+  color: var(--color-text);
+}
+.ai-message__bubble--user {
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  border-radius: 18px 18px 4px 18px;
+}
+.ai-message--user .ai-message__bubble { border-radius: 18px 18px 4px 18px; }
+
+.ai-message__loading {
+  display: flex; align-items: center; gap: 4px;
+  padding: 14px 18px;
+}
+.ai-message__loading span {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--color-gray);
+  animation: aiDot 1.2s ease-in-out infinite;
+}
+.ai-message__loading span:nth-child(2) { animation-delay: 0.2s; }
+.ai-message__loading span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes aiDot {
+  0%, 80%, 100% { transform: scale(0.7); opacity: 0.4; }
+  40% { transform: scale(1); opacity: 1; }
+}
+
+.ai-suggestions {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  padding: 0 var(--page-pad) 10px;
+}
+.ai-suggestion-chip {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--r-pill);
+  padding: 7px 14px;
+  font-size: 12px; font-weight: 500;
+  color: var(--color-text);
+  cursor: pointer;
+  transition: background var(--dur-fast), border-color var(--dur-fast);
+}
+.ai-suggestion-chip:active { background: var(--color-primary-light); border-color: var(--color-primary); }
+
+.ai-input-row {
+  display: flex; gap: 10px; align-items: center;
+  padding: 12px var(--page-pad) 16px;
+  border-top: 1px solid var(--color-border);
+  background: var(--color-bg);
+}
+.ai-input-row input {
+  flex: 1; padding: 11px 16px;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--r-pill);
+  font-size: 14px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  outline: none;
+  transition: border-color var(--dur-fast);
+}
+.ai-input-row input:focus { border-color: var(--color-primary); }
+.ai-send-btn {
+  width: 42px; height: 42px; border-radius: 50%; flex-shrink: 0;
+  background: var(--color-primary); color: #fff; border: none;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: opacity var(--dur-fast);
+}
+.ai-send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.ai-send-btn:active:not(:disabled) { opacity: 0.85; }
+
+[data-theme="dark"] .ai-message__bubble {
+  background: var(--color-surface);
+  border-color: var(--color-border);
+  color: var(--color-text);
+}
+[data-theme="dark"] .ai-suggestion-chip {
+  background: var(--color-surface);
+  border-color: var(--color-border);
+  color: var(--color-text);
+}
+[data-theme="dark"] .ai-input-row input {
+  background: var(--color-surface);
+  color: var(--color-text);
 }

@@ -137,3 +137,7 @@ export function updateSettings(patch) {
 export function updateProfile(name, tier) {
   Store.setState(s => ({ profile: { ...s.profile, name, tier } }));
 }
+
+export function setActiveTripId(tripId) {
+  Store.setState(s => ({ ...s, activeTripId: tripId }));
+}
