@@ -1,58 +1,43 @@
-# Assets
+# Vouya — Aplicação Web Frontend
 
-This frontend uses hotlinked Unsplash photography and pravatar.cc placeholder
-avatars for demo imagery instead of bundled binary files, since the project
-brief calls for zero backend/external dependencies in *code* — image hosting
-is the one exception, used purely so the demo has realistic photography
-without shipping large binary assets in this deliverable.
+> Uma aplicação web interativa e rica em recursos para planejamento de viagens e comunidade, construída com JavaScript puro (vanilla JS), contando com persistência no lado do cliente, itinerários dinâmicos, feed da comunidade e fluxos de reserva em tempo real.
 
-To swap in your own images for production:
-1. Drop files into this folder (e.g. `assets/destinations/kyoto.jpg`).
-2. Replace the matching `img` field inside the `destinations` array in the
-   seed data at the top of `js/app.js` (function `buildSeedData`).
+---
 
-No other code changes are required.
+## 🚀 O que há de novo na v2.6
 
-## v2.6 — community feed & posting
+* **Feed da Comunidade e Compartilhamento Social:**
+* **FAB Central Estilo Instagram:** Um botão de ação flutuante elevado na barra de navegação inferior (+) posicionado entre Explorar e Viagens para abrir instantaneamente um menu de escolha para postagens.
+* **Aba de Viagens com Visualização Dupla:** Alterne perfeitamente entre **"Minhas viagens"** (planejadores de viagens futuras/passadas) e o **"Feed da comunidade"** (postagens da comunidade semeada + as suas, completo com um filtro *Todas/Minhas*).
+* **Compositores Interativos:**
+* *Compositor de Avaliação:* Escolha um destino, toque em uma avaliação por estrelas e escreva sua opinião. É publicado instantaneamente no feed da comunidade e sincronizado diretamente com a aba de avaliações daquele destino na tela de detalhes.
+* *Compositor de Momentos:* Uma postagem mais livre (sem avaliação) com foto opcional, para atualizações gerais de uma viagem.
 
-- **Center FAB** (Instagram-style +) sits raised on the bottom nav between
-  Explore and Trips. Tapping it opens a choice sheet: "Write a review" or
-  "Share a moment."
-- **Trips tab now hosts two views** via a top-level toggle: "My trips"
-  (the original Upcoming/Past planner) and "Community feed" (posts from
-  the seeded community + your own, with an All/Mine filter).
-- **Review composer** — pick a destination, tap a star rating, write your
-  text. Posting adds it to the feed *and* to that destination's own Reviews
-  tab on the detail screen, so it actually shows up where reviews live.
-- **Moment composer** — a freer post (no rating) with an optional photo,
-  for general updates from a trip.
-- **"Leave a review" on a past trip** now opens the real review composer
-  pre-filled with that trip's destination, instead of just flipping a flag.
-- **Likes** on feed posts, toggleable, persisted like everything else.
 
-## v2.5 — persistence, real CRUD, booking flow
+* **Ações Integradas:** Clicar em "Deixar uma avaliação" em uma viagem passada agora abre o compositor de avaliações real pré-preenchido com o destino daquela viagem.
+* **Engajamento:** Curtidas em postagens do feed que podem ser alternadas e que persistem como o restante dos dados.
 
-This build added a real (client-side) data layer on top of the original
-static prototype:
 
-- **Persistence** — trips, favorites, emergency contacts, profile, and
-  settings are saved to `localStorage` and survive a page refresh. Use
-  Profile → "Reset demo data" to restore the original seed data at any time.
-- **13 real destinations** with their own price, safety score, reviews, and
-  photos — Explore, the Home "Curated" rail, and the destination detail
-  screen all read from the same dataset instead of one hardcoded example.
-- **A working booking flow** — Explore → destination detail → "Add to my
-  trips" opens a real Booking screen (dates, traveler count, optional
-  Vouya Shield protection, live total) and creates an actual trip on
-  confirm, which then appears in Trips and Itinerary.
-- **Multi-trip itineraries** — each trip owns its own day-by-day plan. The
-  Itinerary screen always reflects whichever trip you tapped into, and
-  drag-and-drop reordering is saved per trip/day.
-- **Real CRUD** — add/remove emergency contacts, add/remove itinerary
-  stops, edit your profile name and tier, all with inline form validation.
-- **Notifications screen** — a real notification center fed by trip and
-  safety events (e.g. confirming a booking or sending an SOS creates a
-  notification), with an unread indicator on the Home bell icon.
-- **Smarter SOS** — the alert sheet addresses your actual emergency
-  contacts by name, and sending an alert logs a real entry to "Recent
-  activity" on the Safety screen.
+
+---
+
+## 🛠️ Recursos Principais (v2.5)
+
+* **Camada de Dados no Lado do Cliente e Persistência:** Viagens, favoritos, contatos de emergência, perfil e configurações são salvos no `localStorage` e sobrevivem a uma atualização de página. Use **Perfil → "Redefinir dados de demonstração"** para restaurar os dados originais a qualquer momento.
+* **13 Destinos Reais:** Com preços, pontuação de segurança, avaliações e fotos próprios — a aba Explorar, a seção "Em destaque" da Início e a tela de detalhes do destino leem do mesmo conjunto de dados em vez de um único exemplo hardcoded.
+* **Fluxo de Reserva Funcional:** Explorar $\rightarrow$ Detalhes do destino $\rightarrow$ "Adicionar às minhas viagens" abre uma tela de Reserva real (datas, número de viajantes, proteção opcional Vouya Shield, total em tempo real) e cria uma viagem real ao confirmar, que aparece imediatamente em Viagens e Itinerário.
+* **Itinerários de Múltiplas Viagens:** Cada viagem possui seu próprio plano dia a dia. A tela de Itinerário sempre reflete a viagem em que você tocou, e a reordenação por *drag-and-drop* (arrastar e soltar) é salva por viagem/dia.
+* **CRUD Real:** Adicione/remova contatos de emergência, adicione/remova paradas no itinerário, edite seu nome de perfil e nível, tudo com validação de formulário em linha (*inline*).
+* **Central de Notificações:** Uma central de notificações real alimentada por eventos de viagens e segurança (por exemplo, confirmar uma reserva ou enviar um SOS gera uma notificação), com um indicador de não lidas no ícone de sino da tela Inicial.
+* **SOS Mais Inteligente:** O painel de alerta chama seus contatos de emergência reais pelo nome, e o envio de um alerta registra uma entrada real em "Atividade recente" na tela de Segurança.
+
+---
+
+## 🖼️ Gerenciamento de Ativos e Imagens
+
+Este frontend utiliza fotografias do Unsplash com links diretos e avatares de espaço reservado do `pravatar.cc` em vez de arquivos binários embutidos, já que o escopo do projeto exige **zero dependências de backend/externas** no código. A hospedagem de imagens é a única exceção, usada puramente para que a demonstração tenha fotografias realistas sem carregar grandes ativos binários nesta entrega.
+
+### Como substituir por suas próprias imagens para produção:
+
+1. Arraste e solte arquivos nesta pasta (por exemplo, `assets/destinations/kyoto.jpg`).
+2. Substitua o campo `img` correspondente dentro do array `destinations` nos dados iniciais no topo de `js/app.js` (função `buildSeedData`).
