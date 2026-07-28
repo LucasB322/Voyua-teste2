@@ -896,7 +896,7 @@ button:focus-visible, input:focus-visible, [tabindex]:focus-visible {
   position: absolute; bottom: 10px; right: 10px;
   background: rgba(255,255,255,0.95);
   border: none; border-radius: var(--r-pill);
-  font-size: 12px; font-weight: 700; color: var(--color-text);
+  font-size: 12px; font-weight: 700; color: #0F172A;
   padding: 7px 12px;
   box-shadow: var(--shadow-sm);
 }
@@ -1263,12 +1263,43 @@ button:focus-visible, input:focus-visible, [tabindex]:focus-visible {
   50% { box-shadow: 0 0 0 12px rgba(239,68,68,0), var(--shadow-danger); }
 }
 .sos-sheet__icon.is-sent { background: var(--color-secondary); animation: none; box-shadow: 0 8px 20px rgba(16,185,129,0.35); }
-.sos-sheet__title { font-size: 19px; font-weight: 800; margin-bottom: 6px; }
+.sos-sheet__icon--warning { background: var(--color-amber); animation: motionIconPulse 1.4s ease-in-out infinite; box-shadow: 0 8px 24px rgba(245,158,11,0.35); margin-bottom: 22px; }
+@keyframes motionIconPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(245,158,11,0.45), 0 8px 24px rgba(245,158,11,0.3); }
+  50% { box-shadow: 0 0 0 9px rgba(245,158,11,0), 0 8px 24px rgba(245,158,11,0.3); }
+}
+.sos-sheet__title { font-size: 19px; font-weight: 800; margin-bottom: 6px; color: var(--color-text); position: relative; z-index: 1; }
 .sos-sheet__sub { font-size: 13px; color: var(--color-gray); line-height: 1.5; margin-bottom: 18px; }
 .sos-sheet__countdown {
   font-size: 44px; font-weight: 800; color: var(--color-danger);
   margin-bottom: 22px; font-variant-numeric: tabular-nums;
 }
+
+/* ============================== TRIP SAFETY CHECKLIST ======================= */
+.bottom-sheet--tall { max-height: 82vh; overflow-y: auto; text-align: left; }
+.trip-safety__head { text-align: center; margin-bottom: 18px; }
+.trip-safety__emoji { font-size: 34px; display: block; margin-bottom: 8px; }
+.trip-safety__title { font-size: 18px; font-weight: 800; color: var(--color-text); margin-bottom: 6px; }
+.trip-safety__sub { font-size: 13px; color: var(--color-gray); line-height: 1.4; }
+
+.trip-safety__list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+.trip-safety__list li {
+  display: flex; gap: 12px; align-items: flex-start;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--r-md);
+  padding: 12px;
+}
+.trip-safety__icon {
+  flex-shrink: 0;
+  width: 34px; height: 34px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 10px;
+  background: var(--color-primary-light);
+  font-size: 16px;
+}
+.trip-safety__list li span:last-child { font-size: 12.5px; color: var(--color-gray); line-height: 1.4; }
+.trip-safety__list li strong { font-size: 13.5px; color: var(--color-text); font-weight: 700; }
 
 /* ============================== LOADING OVERLAY ============================ */
 .loading-overlay {
@@ -2048,9 +2079,10 @@ button:focus-visible, input:focus-visible, [tabindex]:focus-visible {
   border-color: var(--color-border);
 }
 
-[data-theme="dark"] .quick-action {
-  background: var(--color-surface);
-}
+[data-theme="dark"] .quick-action__icon--blue { background: rgba(37,99,235,0.22); }
+[data-theme="dark"] .quick-action__icon--green { background: rgba(16,185,129,0.22); }
+[data-theme="dark"] .quick-action__icon--red { background: rgba(239,68,68,0.22); }
+[data-theme="dark"] .quick-action__icon--amber { background: rgba(245,158,11,0.22); }
 
 [data-theme="dark"] .day-chip {
   background: var(--color-surface);
@@ -2110,9 +2142,9 @@ button:focus-visible, input:focus-visible, [tabindex]:focus-visible {
   background: var(--color-surface); 
   border-color: var(--color-border); 
 }
-[data-theme="dark"] .advisory-row__title { color: var(--color-text) !important; }
-[data-theme="dark"] .advisory-row__sub { color: var(--color-gray) !important; }
-[data-theme="dark"] .advisory-row__badge { color: var(--color-text) !important; }
+
+[data-theme="dark"] .advisory strong { color: var(--color-text) !important; }
+[data-theme="dark"] .advisory p { color: var(--color-gray) !important; }
 
 /* Feed — nomes e textos */
 [data-theme="dark"] .post-card { 
@@ -2299,3 +2331,51 @@ button:focus-visible, input:focus-visible, [tabindex]:focus-visible {
   background: var(--color-surface);
   color: var(--color-text);
 }
+
+/* ============================== PLAN & UPGRADE =========================== */
+.plan-upgrade__scroll { flex: 1; overflow-y: auto; padding: 0 var(--page-pad); padding-bottom: 100px; }
+.plan-upgrade__hint { font-size: 13px; color: var(--color-gray); line-height: 1.5; margin-bottom: 16px; }
+
+.plan-cards { display: flex; flex-direction: column; gap: 14px; }
+.plan-card {
+  position: relative;
+  display: flex; flex-direction: column; gap: 14px;
+  text-align: left;
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--r-lg);
+  padding: 18px;
+  cursor: pointer;
+  transition: border-color var(--dur-fast), transform var(--dur-fast) var(--ease-spring), box-shadow var(--dur-fast);
+}
+.plan-card:active { transform: scale(0.985); }
+.plan-card.is-selected { border-color: var(--color-primary); box-shadow: 0 0 0 3px var(--color-primary-light); }
+.plan-card.is-current { border-color: var(--color-secondary); box-shadow: none; }
+
+.plan-card--premium {
+  background: linear-gradient(135deg, var(--color-primary-light), #EAF1FF);
+  border-color: var(--color-primary);
+}
+[data-theme="dark"] .plan-card--premium { background: linear-gradient(135deg, #1a2a52, #182240); }
+.plan-card--premium.is-current { border-color: var(--color-secondary); }
+
+.plan-card__ribbon {
+  position: absolute; top: -10px; right: 16px;
+  background: var(--color-primary); color: #fff;
+  font-size: 10.5px; font-weight: 700; letter-spacing: 0.02em;
+  padding: 4px 10px; border-radius: var(--r-pill);
+}
+
+.plan-card__head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.plan-card__name { font-size: 16px; font-weight: 800; color: var(--color-text); }
+.plan-card__price { display: flex; align-items: baseline; gap: 5px; }
+.plan-card__price strong { font-size: 27px; font-weight: 800; color: var(--color-text); }
+.plan-card__price span { font-size: 12.5px; color: var(--color-gray); font-weight: 600; }
+
+.plan-feature-list { display: flex; flex-direction: column; gap: 10px; }
+.plan-feature-list li { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: var(--color-text); line-height: 1.35; }
+.plan-feature-list li svg { flex-shrink: 0; margin-top: 1px; color: var(--color-secondary); }
+.plan-feature-list--premium li svg { color: var(--color-primary); }
+.plan-feature-list li.is-heading { color: var(--color-gray); font-weight: 700; font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+
+.btn:disabled { opacity: 0.55; pointer-events: none; }

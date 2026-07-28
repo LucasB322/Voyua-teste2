@@ -2,6 +2,7 @@ import { Store } from '../store/store.js';
 import { Router } from '../router/router.js';
 import { destCardHtml, destRowHtml } from '../components/dest-card.js';
 import { escapeHtml, qs, qsa } from '../utils/dom.js';
+import { formatPrice } from '../utils/format.js';
 
 let _activeFilter = 'all';
 let _activeDetailDestId = null;
@@ -98,7 +99,7 @@ function renderDetail(state, destId) {
   qs('#detail-country').textContent = dest.country;
   qs('#detail-rating').textContent = `★ ${dest.rating}`;
   qs('#detail-review-count').textContent = dest.reviewCount.toLocaleString();
-  qs('#detail-price').textContent = `$${dest.price}`;
+  qs('#detail-price').textContent = formatPrice(dest.price);
   qs('#detail-desc').textContent = dest.desc;
 
   const favBtn = qs('#detail-fav-btn');

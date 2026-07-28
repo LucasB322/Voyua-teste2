@@ -1,16 +1,19 @@
 import { Store } from '../store/store.js';
 import { Router } from '../router/router.js';
-import { sendSOS, addSafetyActivity, addEmergencyContact, removeEmergencyContact } from '../store/actions.js';
+import { sendSOS, sendMotionAlert, addSafetyActivity, addEmergencyContact, removeEmergencyContact, updateSettings } from '../store/actions.js';
 import { showToast } from '../components/toast.js';
 import { openSheet, closeSheet } from '../components/sheet.js';
 import { escapeHtml, qs, qsa, vibrate } from '../utils/dom.js';
 import { relativeTime } from '../utils/dates.js';
 import { uid } from '../utils/format.js';
 import { setFieldError, clearFieldError } from '../utils/validate.js';
+import { MotionGuard } from '../utils/motionGuard.js';
 
 const SOS_HOLD_MS = 2000;
 const SOS_COUNTDOWN_S = 5;
+const MOTION_ALERT_COUNTDOWN_S = 15;
 let _sosTimer = null;
+let _motionAlertTimer = null;
 
 export function initSafety() {
   Router.register('safety', { onShow: () => renderSafety(Store.getState()) });
@@ -19,6 +22,7 @@ export function initSafety() {
   initContactForm();
   // initCheckinForm();
   initShareLocation();
+  initMotionDetection();
 }
 
 export function renderSafety() {
@@ -61,6 +65,8 @@ export function renderSafety() {
         <span class="activity-row__icon">${a.icon}</span>
         <div class="activity-row__body"><strong>${escapeHtml(a.text)}</strong><span>${relativeTime(a.time)}</span></div>
       </div>`).join('') || `<p style="font-size:13px;color:var(--color-gray);">No recent activity.</p>`;
+
+  syncMotionGuardToggle(state);
 }
 
 function initSosButton() {
@@ -244,6 +250,218 @@ function initShareLocation() {
 
   qs('#sharelink-backdrop')?.addEventListener('click', () => closeSheet('sharelink'));
   qsa('[data-close-sheet="sharelink"]').forEach(b => b.addEventListener('click', () => closeSheet('sharelink')));
+}
+
+// ---------------------------------------------------------------------------
+// Motion anomaly detection (walking -> running / sudden movement)
+//
+// Only runs while this tab is open and the screen is on — browsers suspend
+// sensor access once the screen locks or the app goes to the background.
+// ---------------------------------------------------------------------------
+function initMotionDetection() {
+  const toggle = qs('#motion-guard-toggle');
+  const statusEl = qs('#motion-guard-status');
+  if (!toggle) return;
+
+  qs('#motion-alert-backdrop')?.addEventListener('click', () => {
+    clearInterval(_motionAlertTimer);
+    closeMotionAlertSheet();
+  });
+
+  toggle.addEventListener('click', async () => {
+    const turningOn = !toggle.classList.contains('is-on');
+
+    if (turningOn) {
+      const state = Store.getState();
+      if (state.emergencyContacts.length === 0) {
+        showToast('Add an emergency contact first', { type: 'danger', actionLabel: 'Add', onAction: () => openSheet('contact') });
+        return;
+      }
+      if (!MotionGuard.isSupported()) {
+        showToast('Your browser doesn\'t support motion sensors', { type: 'danger' });
+        return;
+      }
+      const started = await MotionGuard.start({ onAnomaly: openMotionAlertSheet });
+      if (!started) {
+        showToast('Motion permission denied — enable it in your browser settings', { type: 'danger' });
+        return;
+      }
+      applyMotionGuardUI(true);
+      updateSettings({ motionGuardEnabled: true });
+      vibrate(15);
+      addSafetyActivity('🏃', 'Motion detection turned on');
+    } else {
+      MotionGuard.stop();
+      applyMotionGuardUI(false);
+      updateSettings({ motionGuardEnabled: false });
+    }
+  });
+}
+
+function applyMotionGuardUI(on) {
+  const toggle = qs('#motion-guard-toggle');
+  const statusEl = qs('#motion-guard-status');
+  if (!toggle || !statusEl) return;
+  toggle.classList.toggle('is-on', on);
+  toggle.setAttribute('aria-checked', String(on));
+  statusEl.textContent = on
+    ? 'On — Vouya will check in if it senses sudden movement'
+    : 'Off — works while Vouya is open and the screen is on';
+}
+
+let _motionSyncInFlight = false;
+
+// Runs every time the Safety screen is shown (called from renderSafety) so
+// the toggle always reflects the saved preference — same idea as Dark Mode.
+// If it was left on, we also try to silently resume the sensor listener;
+// on iOS this can still require a fresh permission tap each page load, so
+// we're honest in the UI if that resume didn't actually succeed.
+function syncMotionGuardToggle(state) {
+  const on = !!state.settings.motionGuardEnabled;
+  applyMotionGuardUI(on);
+
+  if (on && !_motionSyncInFlight) {
+    _motionSyncInFlight = true;
+    MotionGuard.start({ onAnomaly: openMotionAlertSheet }).then((started) => {
+      _motionSyncInFlight = false;
+      if (!started) {
+        applyMotionGuardUI(false);
+        updateSettings({ motionGuardEnabled: false });
+      }
+    });
+  }
+}
+
+function openMotionAlertSheet() {
+  vibrate([60, 40, 60, 40, 60]);
+
+  const imokBtn = qs('#motion-alert-imok');
+  const helpBtn = qs('#motion-alert-help');
+
+  // Reset both buttons every time the sheet opens — avoids leftover
+  // styling/text from a previous "alert sent" state.
+  imokBtn.style.display = '';
+  imokBtn.textContent = "I'm okay, cancel";
+  imokBtn.className = 'btn btn--primary btn--block';
+  imokBtn.onclick = () => {
+    clearInterval(_motionAlertTimer);
+    closeMotionAlertSheet();
+    showToast("Glad you're okay!");
+    vibrate(15);
+  };
+
+  helpBtn.style.display = '';
+  helpBtn.textContent = 'I need help now';
+  helpBtn.className = 'btn btn--outline-danger btn--block';
+  helpBtn.onclick = () => {
+    clearInterval(_motionAlertTimer);
+    fireMotionAlert();
+  };
+
+  qs('#motion-alert-sms-actions').innerHTML = '';
+  qs('#motion-alert-countdown').style.display = '';
+  qs('#motion-alert-sub').textContent = "Are you okay? If you don't respond, we'll send your exact location to your emergency contacts in";
+  qs('#motion-alert-icon').classList.add('sos-sheet__icon--warning');
+  qs('#motion-alert-icon').classList.remove('is-sent');
+  qs('#motion-alert-title').textContent = 'Unusual movement detected';
+
+  qs('#motion-alert-backdrop').classList.add('is-active');
+  qs('#motion-alert-sheet').classList.add('is-active');
+
+  let count = MOTION_ALERT_COUNTDOWN_S;
+  qs('#motion-alert-countdown').textContent = count;
+  _motionAlertTimer = setInterval(() => {
+    count -= 1;
+    if (count <= 0) { clearInterval(_motionAlertTimer); fireMotionAlert(); }
+    else qs('#motion-alert-countdown').textContent = count;
+  }, 1000);
+}
+
+// Builds an sms: link that opens the phone's own Messages app with the
+// number and message pre-filled — works offline, no third-party app needed.
+function smsLink(phone, msg) {
+  const digits = (phone || '').replace(/[^\d+]/g, '');
+  return `sms:${digits}?&body=${encodeURIComponent(msg)}`;
+}
+
+function fireMotionAlert() {
+  const state = Store.getState();
+  const contacts = state.emergencyContacts;
+  const contactNames = contacts.map(c => c.name).join(' and ') || 'your contacts';
+
+  getExactLocation().then(({ label, mapsUrl }) => {
+    const msg = `⚠️ Vouya automatic alert: unusual movement detected and no response received.\n\nExact location: ${mapsUrl}`;
+
+    qs('#motion-alert-icon').classList.remove('sos-sheet__icon--warning');
+    qs('#motion-alert-icon').classList.add('is-sent');
+    qs('#motion-alert-icon').innerHTML = `<svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="white" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+    qs('#motion-alert-title').textContent = 'Your location has been sent';
+    qs('#motion-alert-sub').textContent = `${contactNames} received an alert about the movement we detected, along with your exact location (${label}).`;
+    qs('#motion-alert-countdown').style.display = 'none';
+
+    // One real SMS button per contact, using their actual phone number.
+    qs('#motion-alert-sms-actions').innerHTML = contacts.map(c => `
+      <a class="btn btn--primary btn--block" href="${smsLink(c.phone, msg)}">Send SMS to ${escapeHtml(c.name.split(' ')[0])}</a>
+    `).join('');
+
+    // The old "help" button already did its job — hide it, the SMS
+    // buttons above replace it.
+    qs('#motion-alert-help').style.display = 'none';
+
+    // "I'm okay" button becomes the Done/close action, same pattern the
+    // SOS sheet already uses once its alert has been sent.
+    const imokBtn = qs('#motion-alert-imok');
+    imokBtn.style.display = '';
+    imokBtn.textContent = 'Done';
+    imokBtn.className = 'btn btn--ghost btn--block';
+    imokBtn.onclick = () => closeMotionAlertSheet();
+
+    // Best-effort auto-open of the SMS app for the first contact — this
+    // fires from a timer, not a direct tap, so some browsers may block it.
+    // The buttons above are the reliable fallback either way.
+    if (contacts[0]) {
+      try { window.location.href = smsLink(contacts[0].phone, msg); } catch { /* blocked — buttons still work */ }
+    }
+
+    vibrate([0, 80, 60, 80, 60, 80]);
+    sendMotionAlert(contactNames, label);
+    renderSafety();
+  });
+}
+
+function getExactLocation() {
+  return new Promise((resolve) => {
+    if (!navigator.geolocation) {
+      resolve(fallbackLocation());
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const { latitude, longitude } = pos.coords;
+        resolve({
+          label: `${latitude.toFixed(5)}, ${longitude.toFixed(5)}`,
+          mapsUrl: `https://www.google.com/maps?q=${latitude},${longitude}`,
+        });
+      },
+      () => resolve(fallbackLocation()),
+      { enableHighAccuracy: true, timeout: 8000, maximumAge: 0 }
+    );
+  });
+}
+
+function fallbackLocation() {
+  // Used if location permission is denied/unavailable — falls back to the
+  // trip destination, same source of truth as the "share location" feature.
+  const state = Store.getState();
+  const trip = state.trips.find(t => t.status === 'upcoming') || state.trips[0];
+  const dest = trip ? state.destinations.find(d => d.id === trip.destinationId) : null;
+  const label = dest ? `near ${dest.name}, ${dest.country}` : 'last known trip area';
+  return { label, mapsUrl: `https://www.google.com/maps/search/${encodeURIComponent(label)}` };
+}
+
+function closeMotionAlertSheet() {
+  qs('#motion-alert-backdrop').classList.remove('is-active');
+  qs('#motion-alert-sheet').classList.remove('is-active');
 }
 
 // Called from global delegation

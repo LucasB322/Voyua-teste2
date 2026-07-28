@@ -20,6 +20,19 @@ export function addTrip(trip) {
   }));
 }
 
+export function addTripSafetyNotification(place) {
+  Store.setState(s => ({
+    notifications: [
+      {
+        id: uid('notif'), type: 'safety', title: 'Thanks for booking with Vouya! 🛡️',
+        body: `We put together a quick pre-trip safety checklist for ${place} — tap to see it.`,
+        time: Date.now(), read: false,
+      },
+      ...s.notifications,
+    ].slice(0, 30),
+  }));
+}
+
 export function setActiveTrip(tripId) {
   Store.setState({ activeTripId: tripId });
 }
@@ -69,6 +82,21 @@ export function sendSOS(contactNames) {
     safetyActivity: [{ id: uid('act'), icon: '🆘', text: msg, time: Date.now() }, ...s.safetyActivity].slice(0, 20),
     notifications: [
       { id: uid('notif'), type: 'safety', title: 'SOS alert sent', body: `Your live location was shared with ${contactNames}.`, time: Date.now(), read: false },
+      ...s.notifications,
+    ].slice(0, 30),
+  }));
+}
+
+export function sendMotionAlert(contactNames, locationLabel) {
+  const msg = `Unusual movement detected — location sent to ${contactNames}`;
+  Store.setState(s => ({
+    safetyActivity: [{ id: uid('act'), icon: '🏃', text: msg, time: Date.now() }, ...s.safetyActivity].slice(0, 20),
+    notifications: [
+      {
+        id: uid('notif'), type: 'safety', title: 'Automatic motion alert sent',
+        body: `We detected an unusual movement pattern and, since you didn't respond, shared your exact location (${locationLabel}) with ${contactNames}.`,
+        time: Date.now(), read: false,
+      },
       ...s.notifications,
     ].slice(0, 30),
   }));
@@ -136,6 +164,10 @@ export function updateSettings(patch) {
 
 export function updateProfile(name, tier) {
   Store.setState(s => ({ profile: { ...s.profile, name, tier } }));
+}
+
+export function setPlan(plan) {
+  Store.setState(s => ({ profile: { ...s.profile, plan } }));
 }
 
 export function setActiveTripId(tripId) {

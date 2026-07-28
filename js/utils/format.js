@@ -6,3 +6,8 @@ export function planningPercent(trip) {
   const vals = Object.values(trip.steps);
   return Math.round((vals.filter(Boolean).length / vals.length) * 100);
 }
+
+export function formatPrice(price) {
+  const cur = window._activeCurrency || { symbol: '$', code: 'USD' };
+  return `${cur.symbol}${price}`;
+}

@@ -1,9 +1,5 @@
 import { escapeHtml } from '../utils/dom.js';
-
-function formatPrice(price) {
-  const cur = window._activeCurrency || { symbol: '$', code: 'USD' };
-  return `${cur.symbol}${price}`;
-}
+import { formatPrice } from '../utils/format.js';
 
 export function destCardHtml(dest, isFav, { large = false } = {}) {
   return `

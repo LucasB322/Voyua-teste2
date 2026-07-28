@@ -1,16 +1,12 @@
 import { Store } from '../store/store.js';
 import { Router } from '../router/router.js';
-import { addTrip } from '../store/actions.js';
+import { addTrip, addTripSafetyNotification } from '../store/actions.js';
 import { showToast } from '../components/toast.js';
 import { simulateAsync } from '../components/loading.js';
+import { openSheet, closeSheet } from '../components/sheet.js';
 import { formatDateRange } from '../utils/dates.js';
-import { uid } from '../utils/format.js';
+import { uid, formatPrice } from '../utils/format.js';
 import { qs, vibrate } from '../utils/dom.js';
-
-function formatPrice(price) {
-  const cur = window._activeCurrency || { symbol: '$', code: 'USD' };
-  return `${cur.symbol}${price}`;
-}
 
 let _draft = null;
 
@@ -22,7 +18,7 @@ export function initBooking() {
         _draft = {
           destinationId: destId,
           start: new Date(today.getTime() + 14 * 86400000).toISOString().slice(0, 10),
-          end:   new Date(today.getTime() + 21 * 86400000).toISOString().slice(0, 10),
+          end: new Date(today.getTime() + 21 * 86400000).toISOString().slice(0, 10),
           travelers: 1,
           protection: true,
         };
@@ -37,6 +33,14 @@ export function initBooking() {
   qs('#travelers-plus').addEventListener('click', () => { if (_draft.travelers < 8) { _draft.travelers++; renderBooking(Store.getState()); } });
   qs('#protection-toggle').addEventListener('change', (e) => { _draft.protection = e.target.checked; renderBooking(Store.getState()); });
   qs('#confirm-booking-btn').addEventListener('click', () => { if (!validateDates()) { vibrate(20); return; } confirmBooking(); });
+
+  qs('#trip-safety-backdrop')?.addEventListener('click', () => closeSheet('trip-safety'));
+  qs('#trip-safety-dismiss')?.addEventListener('click', () => closeSheet('trip-safety'));
+  qs('#trip-safety-goto-safety')?.addEventListener('click', () => {
+    closeSheet('trip-safety');
+    Router.go('safety');
+  });
+
 }
 
 function renderBooking(state) {
@@ -48,7 +52,7 @@ function renderBooking(state) {
     <div class="booking-summary__body">
       <h3>${dest.name}</h3>
       <p>${dest.country} · <span class="rating">★ ${dest.rating}</span></p>
-      <p>$${formatPrice(dest.price)} / person</p>
+      <p>${formatPrice(dest.price)} / person</p>
     </div>`;
 
   qs('#booking-start').value = _draft.start;
@@ -61,7 +65,7 @@ function renderBooking(state) {
 
   const subtotal = dest.price * _draft.travelers;
   const protCost = _draft.protection ? Math.round(subtotal * 0.08) : 0;
-  
+
   // Payment method
   const cards = (window._voucherCards && window._voucherCards.length > 0)
     ? window._voucherCards
@@ -73,7 +77,7 @@ function renderBooking(state) {
     <div class="booking-payment-box">
       <div class="booking-payment-method is-selected">
         <div class="booking-payment-method__left">
-          <div class="payment__brand payment__brand--${def.brand === 'Visa' ? 'visa' : def.brand === 'Mastercard' ? 'master' : 'generic'}">${def.brand.slice(0,4).toUpperCase()}</div>
+          <div class="payment__brand payment__brand--${def.brand === 'Visa' ? 'visa' : def.brand === 'Mastercard' ? 'master' : 'generic'}">${def.brand.slice(0, 4).toUpperCase()}</div>
           <div class="booking-payment-method__info">
             <strong>${def.brand} •••• ${def.last4}</strong>
             <span>Valid until ${def.expiry}</span>
@@ -136,11 +140,15 @@ function confirmBooking() {
       days: { 1: [] },
     };
     addTrip(newTrip);
+    addTripSafetyNotification(`${dest.name}, ${dest.country}`);
     Router.clearHistory();
     Router.go('trips', { pushHistory: false });
-    setTimeout(() => showToast(`Added ${dest.name} to your trips`, {
-      actionLabel: 'View',
-      onAction: () => Router.go('itinerary'),
-    }), 350);
+    setTimeout(() => {
+      showToast(`Added ${dest.name} to your trips`, {
+        actionLabel: 'View',
+        onAction: () => Router.go('itinerary'),
+      });
+      openSheet('trip-safety');
+    }, 350);
   }, 1100);
 }

@@ -17,6 +17,7 @@ import { initComposer, openReviewComposer } from './screens/composer.js';
 import { initPayment } from './screens/payment.js';
 import { vibrate, qsa } from './utils/dom.js';
 import { initCurrency } from './screens/currency.js';
+import { initPlanUpgrade } from './screens/plan-upgrade.js';
 import { initAIPlanner } from './screens/ai-planner.js';
 
 
@@ -47,6 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initCurrency();
   initComposer();
   initAIPlanner();
+  initPlanUpgrade();
 
 
   // ── Global event delegation ──────────────────────────────────────────────

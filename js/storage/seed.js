@@ -4,8 +4,8 @@ export function buildSeedData() {
   const iso = (d) => new Date(now + d * DAY).toISOString().slice(0, 10);
 
   return {
-    profile: { name: 'Amelia Cross', tier: 'Explorer', memberSince: 2022, rating: 4.9 },
-    settings: { darkMode: false, locationSharing: true, pushNotifications: true },
+    profile: { name: 'Amelia Cross', tier: 'Explorer', memberSince: 2022, rating: 4.9, plan: 'free' },
+    settings: { darkMode: false, locationSharing: true, pushNotifications: true, motionGuardEnabled: false },
     favorites: ['swiss-alps', 'bali'],
     destinations: [
       {
